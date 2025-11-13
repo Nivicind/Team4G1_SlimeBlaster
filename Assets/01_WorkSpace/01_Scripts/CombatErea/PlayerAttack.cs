@@ -17,9 +17,8 @@ public class PlayerAttackAndMove2D : MonoBehaviour
     public SpriteRenderer rend;
     private Camera mainCamera;
 
-    private void Start()
+    private void OnEnable()
     {
-        playerStats = GetComponent<PlayerStats>();
         mainCamera = Camera.main;
         StartCoroutine(AttackRoutine());
     }
@@ -76,8 +75,8 @@ public class PlayerAttackAndMove2D : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            // Apply damage if enemy has EnemyMovement script
-            EnemyMovement enemy = hit.GetComponent<EnemyMovement>();
+            // Apply damage if enemy has Enemy script
+            Enemy enemy = hit.GetComponent<Enemy>();
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);

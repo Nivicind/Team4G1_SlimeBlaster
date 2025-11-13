@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3cea06f9bca6014aa2e909bf67b17e5, type: 3}
   m_Name: SimpleEnemy
   m_EditorClassIdentifier: 
-  hp: 500
+  hp: 30
   multiplierBaseReflection: 1
   exp: 10
+  spawnAmount: 1
+  spawnInterval: 2
+  maxCapacity: 10
+  startTime: 0

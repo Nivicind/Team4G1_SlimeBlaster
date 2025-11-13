@@ -32,26 +32,26 @@ public class PlayerStats : MonoBehaviour
 {
     #region Inspector Variables
     [Header("Player Stats (Inspector)")]
-    public int hp;
-    public int hpLossPerSecond;
-    public int damage;
-    public int attackSizePercent;
-    public int attackSpeed;
-    public int exp;
-    public int baseReflection;
-    public int armor;
-    public int bossArmor;
-    public int bossDamage;
-    public int critRatePercent;
-    public int critDamagePercent;
-    public int additionalDamagePerEnemyInAreaPercent;
-    public int additionalRedBitsDropPerEnemy;
-    public int spawnRatePercent;
+    public int hp = 100;
+    public int hpLossPerSecond = 1;
+    public int damage = 10;
+    public int attackSizePercent = 100;
+    public int attackSpeed = 1;
+    public int exp = 0;
+    public int baseReflection = 0;
+    public int armor = 0;
+    public int bossArmor = 0;
+    public int bossDamage = 0;
+    public int critRatePercent = 5;
+    public int critDamagePercent = 150;
+    public int additionalDamagePerEnemyInAreaPercent = 0;
+    public int additionalRedBitsDropPerEnemy = 0;
+    public int spawnRatePercent = 100;
 
     [Header("Currencies (Inspector)")]
-    public int redBits;
-    public int blueBits;
-    public int purpleBits;
+    public int redBits = 1000;
+    public int blueBits = 1000;
+    public int purpleBits = 1000;
     #endregion
 
     // Runtime dictionaries
@@ -92,7 +92,7 @@ public class PlayerStats : MonoBehaviour
     }
     private void UpdateValueToInspector()
     {
-              // Sync inspector variables to dictionary values
+        // Sync inspector variables to dictionary values
         hp = statsDict[EnumStat.hp];
         hpLossPerSecond = statsDict[EnumStat.hpLossPerSecond];
         damage = statsDict[EnumStat.damage];
