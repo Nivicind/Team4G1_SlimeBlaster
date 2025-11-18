@@ -23,6 +23,16 @@ public class PlayerAttackAndMove2D : MonoBehaviour
         StartCoroutine(AttackRoutine());
     }
 
+    private void OnDisable()
+    {
+        if (rend != null)
+        {
+            Color color = rend.color;
+            color.a = 0f;
+            rend.color = color;
+        }
+    }
+
     private void Update()
     {
         HandleMovement();

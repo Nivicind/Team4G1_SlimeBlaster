@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public ObjectPool pool;
     [HideInInspector] public EnemySpawner spawner;
 
-    private int currentHealth;
+    public int currentHealth { get; private set; }
     private Camera mainCamera;
     private bool justSpawned = true;
     private float spawnIgnoreTime = 3f;
