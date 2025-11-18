@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,8 +9,8 @@ public class BreachTerminateManager : MonoBehaviour
     public Button terminateButton;
 
     [Header("Targets")]
-    public GameObject upgradeScene;
-    public GameObject combatScene;
+    public List<GameObject> upgradeScenes;
+    public List<GameObject> combatScenes;
 
     private void Awake()
     {
@@ -21,8 +22,11 @@ public class BreachTerminateManager : MonoBehaviour
     private void Start()
     {
         // ✅ Show Breach/Upgrade first
-        if (upgradeScene != null) upgradeScene.SetActive(true);
-        if (combatScene != null) combatScene.SetActive(false);
+        foreach (var scene in upgradeScenes)
+            if (scene != null) scene.SetActive(true);
+        
+        foreach (var scene in combatScenes)
+            if (scene != null) scene.SetActive(false);
 
         // ✅ Show Breach button, hide Terminate button
         if (breachButton != null) breachButton.gameObject.SetActive(true);
@@ -32,8 +36,11 @@ public class BreachTerminateManager : MonoBehaviour
     private void OnBreachClicked()
     {
         // ✅ Switch to Combat Scene
-        if (upgradeScene != null) upgradeScene.SetActive(false);
-        if (combatScene != null) combatScene.SetActive(true);
+        foreach (var scene in upgradeScenes)
+            if (scene != null) scene.SetActive(false);
+        
+        foreach (var scene in combatScenes)
+            if (scene != null) scene.SetActive(true);
 
         // ✅ Hide Breach button, show Terminate button
         if (breachButton != null) breachButton.gameObject.SetActive(false);
@@ -43,8 +50,11 @@ public class BreachTerminateManager : MonoBehaviour
     private void OnTerminateClicked()
     {
         // ✅ Switch back to Upgrade Scene
-        if (combatScene != null) combatScene.SetActive(false);
-        if (upgradeScene != null) upgradeScene.SetActive(true);
+        foreach (var scene in combatScenes)
+            if (scene != null) scene.SetActive(false);
+        
+        foreach (var scene in upgradeScenes)
+            if (scene != null) scene.SetActive(true);
 
         // ✅ Hide Terminate button, show Breach button
         if (terminateButton != null) terminateButton.gameObject.SetActive(false);
