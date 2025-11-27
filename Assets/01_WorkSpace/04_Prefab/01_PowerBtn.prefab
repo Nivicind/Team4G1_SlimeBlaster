@@ -280,8 +280,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeButton: {fileID: 4436868978915430211}
-  canAffordUI: {fileID: 1445131662411700045}
-  cannotAffordUI: {fileID: 790690152955704140}
+  icon: {fileID: 6526865654660229865}
+  cannotAffordUI: {fileID: 1445131662411700045}
+  canAffordUI: {fileID: 790690152955704140}
   fullyUpgradedUI: {fileID: 7170033545328588946}
   defaultUI: {fileID: 7432672327780298040}
 --- !u!1 &6526865654660229865

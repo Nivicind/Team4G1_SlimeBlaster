@@ -40,12 +40,6 @@ public class UpgradeButton : MonoBehaviour
         UpdateUnlockStatus();
     }
 
-    private void Update()
-    {
-        // Continuously update unlock status to react to changes
-        UpdateUnlockStatus();
-    }
-
     private void OnClick()
     {
         if (!nodeInstance.CanUpgrade()) return;
@@ -77,7 +71,7 @@ public class UpgradeButton : MonoBehaviour
     {
         if (nodeInstance.unlockRoot == null)
         {
-            // Root node is always visible
+            // Root node is always unlocked
             nodeInstance.unlocked = true;
         }
         else
@@ -86,10 +80,10 @@ public class UpgradeButton : MonoBehaviour
             nodeInstance.unlocked = nodeInstance.unlockRoot.currentLevel >= nodeInstance.unlockRequirementLevel;
         }
 
-        // Hide/show all children based on unlock status
-        foreach (Transform child in transform)
+        // Enable/disable button interactability based on unlock status
+        if (button != null)
         {
-            child.gameObject.SetActive(nodeInstance.unlocked);
+            button.interactable = nodeInstance.unlocked;
         }
 
         // Update children if unlocked

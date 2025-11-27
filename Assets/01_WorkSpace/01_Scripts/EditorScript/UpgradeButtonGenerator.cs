@@ -248,7 +248,17 @@ public class UpgradeButtonGenerator : MonoBehaviour
                 lineImage.color = lineColor;
                 lineImage.raycastTarget = false; // Don't block button clicks
 
-                Debug.Log($"✓ UI Line CREATED: {lineName} (distance: {distance})");
+                // Assign line to button's appearance component
+                UpgradeButtonApearance appearance = buttonObj.GetComponent<UpgradeButtonApearance>();
+                if (appearance != null)
+                {
+                    appearance.line = lineObj;
+                    Debug.Log($"✓ UI Line CREATED and ASSIGNED: {lineName} (distance: {distance})");
+                }
+                else
+                {
+                    Debug.Log($"✓ UI Line CREATED: {lineName} (distance: {distance}) - No UpgradeButtonApearance component");
+                }
                 linesCreated++;
             }
         }
