@@ -44,6 +44,9 @@ TagManager:
   - name: Backround
     uniqueID: 2522791511
     locked: 0
+  - name: Shadow
+    uniqueID: 2924804923
+    locked: 0
   - name: Enemy
     uniqueID: 1431183063
     locked: 0

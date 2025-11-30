@@ -189,9 +189,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1431183063
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 6f58a542e611d044cb5736e9d4fa3e9e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0c41ff0afe3bf8c448529791150e7a25, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -232,6 +232,9 @@ MonoBehaviour:
   pool: {fileID: 0}
   spawner: {fileID: 0}
   currencyReference: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
+  hasTarget: 0
+  isDefeated: 0
 --- !u!1 &7692305340677514862
 GameObject:
   m_ObjectHideFlags: 0

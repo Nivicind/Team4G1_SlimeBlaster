@@ -3,9 +3,9 @@ using UnityEngine;
 public class StoreCurrencyReference : MonoBehaviour
 {
     [Header("Currency Pools")]
-    public ObjectPool redBitsCurrencyPool;
     public ObjectPool blueBitsCurrencyPool;
-    public ObjectPool purpleBitsCurrencyPool;
+    public ObjectPool pinkBitsCurrencyPool;
+    public ObjectPool redBitsCurrencyPool;
 
     public ObjectPool GetCurrencyPool(EnumCurrency currencyType)
     {
@@ -15,8 +15,8 @@ public class StoreCurrencyReference : MonoBehaviour
                 return redBitsCurrencyPool;
             case EnumCurrency.blueBits:
                 return blueBitsCurrencyPool;
-            case EnumCurrency.purpleBits:
-                return purpleBitsCurrencyPool;
+            case EnumCurrency.pinkBits:
+                return pinkBitsCurrencyPool;
             default:
                 return null;
         }

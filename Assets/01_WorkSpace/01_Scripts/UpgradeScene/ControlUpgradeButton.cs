@@ -71,6 +71,16 @@ public class ControlUpgradeButton : MonoBehaviour
             scale.y = Mathf.Clamp(scale.y, minZoom, maxZoom);
             scale.z = Mathf.Clamp(scale.z, minZoom, maxZoom);
             targetObject.transform.localScale = scale;
+
+            if (background != null)
+            {
+                Vector3 bgScale = background.transform.localScale;
+                bgScale += Vector3.one * scroll * zoomSpeed * 0.5f;
+                bgScale.x = Mathf.Clamp(bgScale.x, minZoom, maxZoom);
+                bgScale.y = Mathf.Clamp(bgScale.y, minZoom, maxZoom);
+                bgScale.z = Mathf.Clamp(bgScale.z, minZoom, maxZoom);
+                background.transform.localScale = bgScale;
+            }
         }
     }
 
@@ -128,6 +138,16 @@ public class ControlUpgradeButton : MonoBehaviour
                 scale.y = Mathf.Clamp(scale.y, minZoom, maxZoom);
                 scale.z = Mathf.Clamp(scale.z, minZoom, maxZoom);
                 targetObject.transform.localScale = scale;
+
+                if (background != null)
+                {
+                    Vector3 bgScale = background.transform.localScale;
+                    bgScale += Vector3.one * difference * zoomSpeed * 0.01f * 0.5f;
+                    bgScale.x = Mathf.Clamp(bgScale.x, minZoom, maxZoom);
+                    bgScale.y = Mathf.Clamp(bgScale.y, minZoom, maxZoom);
+                    bgScale.z = Mathf.Clamp(bgScale.z, minZoom, maxZoom);
+                    background.transform.localScale = bgScale;
+                }
             }
         }
     }

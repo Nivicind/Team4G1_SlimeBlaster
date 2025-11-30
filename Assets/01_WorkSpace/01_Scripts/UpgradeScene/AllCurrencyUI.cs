@@ -7,9 +7,9 @@ public class AllCurrencyUI : MonoBehaviour
     public PlayerStats playerStats;
 
     [Header("TextMeshPro UI")]
-    public TextMeshProUGUI redBitsText;
     public TextMeshProUGUI blueBitsText;
-    public TextMeshProUGUI purpleBitsText;
+    public TextMeshProUGUI pinkBitsText;
+    public TextMeshProUGUI redBitsText;
 
 
     void Update()
@@ -18,12 +18,12 @@ public class AllCurrencyUI : MonoBehaviour
 
         // Update all three currency text fields
         if (redBitsText != null)
-            redBitsText.text = "Red Bits: " + playerStats.redBits.ToString();
+            redBitsText.text = playerStats.redBits.ToString();
         
         if (blueBitsText != null)
-            blueBitsText.text = "Blue Bits: " + playerStats.blueBits.ToString();
+            blueBitsText.text = playerStats.blueBits.ToString();
         
-        if (purpleBitsText != null)
-            purpleBitsText.text = "Purple Bits: " + playerStats.purpleBits.ToString();
+        if (pinkBitsText != null)
+            pinkBitsText.text = playerStats.pinkBits.ToString();
     }
 }

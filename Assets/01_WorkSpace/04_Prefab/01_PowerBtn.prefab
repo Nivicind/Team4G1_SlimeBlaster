@@ -166,7 +166,7 @@ GameObject:
   m_Layer: 5
   m_Name: 01_PowerBtn
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: bbc04124490289341997b390e5350046, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -281,6 +281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeButton: {fileID: 4436868978915430211}
   icon: {fileID: 6526865654660229865}
+  line: {fileID: 0}
   cannotAffordUI: {fileID: 1445131662411700045}
   canAffordUI: {fileID: 790690152955704140}
   fullyUpgradedUI: {fileID: 7170033545328588946}

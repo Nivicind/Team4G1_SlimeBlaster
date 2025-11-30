@@ -20,7 +20,7 @@ public enum EnumStat
 
 public enum EnumCurrency
 {
-    redBits,
     blueBits,
-    purpleBits
+    pinkBits,
+    redBits
 }
