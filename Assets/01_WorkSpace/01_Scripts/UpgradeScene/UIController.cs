@@ -12,7 +12,6 @@ public class UIController : MonoBehaviour
     [Header("Upgrade Popup Panel")]
     public GameObject upgradePopupPanel;
     public GameObject popupContentPanel; // The inner panel with upgrade info
-    public GameObject nowhereArea; // Click this area to close popup
     public TMP_Text nameText;
     public TMP_Text description1Text;
     public TMP_Text description2Text;
@@ -30,6 +29,16 @@ public class UIController : MonoBehaviour
     public float popupMoveAmount = 300f;
     public float popupAnimationDuration = 0.3f;
     public Ease popupEaseType = Ease.OutBack;
+
+    [Header("Button Scale Animation")]
+    public float selectedButtonScale = 1.15f;
+    public float buttonScaleDuration = 0.2f;
+    public Ease buttonScaleEase = Ease.OutBack;
+
+    [Header("Confirm Button Jiggle")]
+    public float confirmJiggleRotation = 10f;
+    public float confirmJiggleScale = 0.2f;
+    public float confirmJiggleDuration = 0.3f;
 
     private bool isPanelOpen = false;
     private Vector3 originalPosition;
@@ -137,8 +146,20 @@ public class UIController : MonoBehaviour
         // Check if popup is already at the down position
         bool isAlreadyDown = Mathf.Abs(popupContentPanel.transform.localPosition.y - popupOriginalPosition.y) < 1f;
 
+        // Reset previous button scale
+        if (currentUpgradeButton != null && currentUpgradeButton != upgradeButton)
+        {
+            currentUpgradeButton.transform.DOScale(Vector3.one, buttonScaleDuration).SetEase(Ease.OutQuad);
+        }
+
         currentNodeInstance = nodeInstance;
         currentUpgradeButton = upgradeButton;
+
+        // Make selected button bigger
+        if (upgradeButton != null)
+        {
+            upgradeButton.transform.DOScale(Vector3.one * selectedButtonScale, buttonScaleDuration).SetEase(buttonScaleEase);
+        }
 
         // Fill in the popup information
         if (nameText != null)
@@ -186,6 +207,12 @@ public class UIController : MonoBehaviour
             popupContentPanel.transform.DOLocalMoveY(popupOriginalPosition.y + popupMoveAmount, popupAnimationDuration).SetEase(popupEaseType);
         }
 
+        // Reset button scale
+        if (currentUpgradeButton != null)
+        {
+            currentUpgradeButton.transform.DOScale(Vector3.one, buttonScaleDuration).SetEase(Ease.OutQuad);
+        }
+
         currentNodeInstance = null;
         currentUpgradeButton = null;
     }
@@ -194,6 +221,27 @@ public class UIController : MonoBehaviour
     {
         if (currentUpgradeButton != null)
         {
+            // Kill any existing tweens on these objects to prevent stacking
+            if (confirmUpgradeButton != null)
+            {
+                confirmUpgradeButton.transform.DOKill();
+                confirmUpgradeButton.transform.rotation = Quaternion.identity;
+                confirmUpgradeButton.transform.localScale = Vector3.one;
+                
+                // Jiggle the confirm button
+                confirmUpgradeButton.transform.DOPunchRotation(new Vector3(0, 0, confirmJiggleRotation), confirmJiggleDuration, 10, 1f);
+                confirmUpgradeButton.transform.DOPunchScale(Vector3.one * confirmJiggleScale, confirmJiggleDuration, 5, 0.5f);
+            }
+
+            // Kill any existing tweens on upgrade button and reset
+            currentUpgradeButton.transform.DOKill();
+            currentUpgradeButton.transform.rotation = Quaternion.identity;
+            
+            // Restore to selected scale, then jiggle
+            currentUpgradeButton.transform.localScale = Vector3.one * selectedButtonScale;
+            currentUpgradeButton.transform.DOPunchRotation(new Vector3(0, 0, confirmJiggleRotation), confirmJiggleDuration, 10, 1f);
+            currentUpgradeButton.transform.DOPunchScale(Vector3.one * selectedButtonScale * confirmJiggleScale, confirmJiggleDuration, 5, 0.5f);
+
             currentUpgradeButton.PerformUpgrade();
             
             // Update the popup info after upgrade

@@ -1475,7 +1475,6 @@ MonoBehaviour:
   resourcePanel: {fileID: 2068995248}
   upgradePopupPanel: {fileID: 1383067628}
   popupContentPanel: {fileID: 1383067628}
-  nowhereArea: {fileID: 0}
   nameText: {fileID: 166638820}
   description1Text: {fileID: 1845992462}
   description2Text: {fileID: 243213243}
@@ -1489,6 +1488,12 @@ MonoBehaviour:
   popupMoveAmount: 400
   popupAnimationDuration: 0.5
   popupEaseType: 27
+  selectedButtonScale: 1.15
+  buttonScaleDuration: 0.2
+  buttonScaleEase: 27
+  confirmJiggleRotation: 6
+  confirmJiggleScale: 0.12
+  confirmJiggleDuration: 0.3
 --- !u!1 &380557004
 GameObject:
   m_ObjectHideFlags: 0
@@ -2411,11 +2416,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1393716574}
-  - {fileID: 626641878}
   - {fileID: 1194132568}
   - {fileID: 621301417}
   - {fileID: 2068995249}
   - {fileID: 1383067629}
+  - {fileID: 626641878}
   m_Father: {fileID: 1742417261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
