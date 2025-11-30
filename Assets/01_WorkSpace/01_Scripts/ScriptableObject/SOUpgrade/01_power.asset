@@ -20,3 +20,5 @@ MonoBehaviour:
   maxLevel: 15
   costFormula: 1+1*(n-1)
   costUnit: 0
+  description1: Increase Damage
+  description2: +1

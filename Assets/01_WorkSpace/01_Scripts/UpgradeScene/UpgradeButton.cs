@@ -13,6 +13,9 @@ public class UpgradeButton : MonoBehaviour
     [Header("Player Stats")]
     public PlayerStats playerStats;
 
+    [Header("UI Controller")]
+    public UIController uiController;
+
     [Header("Runtime Line Renderer")]
     public bool drawLineInGame = true;
     public float lineWidth = 0.1f;
@@ -41,6 +44,22 @@ public class UpgradeButton : MonoBehaviour
     }
 
     private void OnClick()
+    {
+        if (!nodeInstance.CanUpgrade()) return;
+
+        // Show the upgrade popup instead of directly upgrading
+        if (uiController != null)
+        {
+            uiController.ShowUpgradePopup(nodeInstance, this);
+        }
+        else
+        {
+            // Fallback: upgrade directly if no UI controller
+            PerformUpgrade();
+        }
+    }
+
+    public void PerformUpgrade()
     {
         if (!nodeInstance.CanUpgrade()) return;
 

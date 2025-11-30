@@ -100,6 +100,8 @@ public class PlayerStats : MonoBehaviour
         SetStatValue(type, current + amount);
     }
 
+    public int GetCurrency(EnumCurrency type)
+        => currencyDict.TryGetValue(type, out int val) ? val : 0;
     public bool HasEnoughCurrency(EnumCurrency type, int amount)
         => currencyDict.TryGetValue(type, out int val) && val >= amount;
     public void SpendCurrency(EnumCurrency type, int amount)

@@ -17,4 +17,9 @@ public class SONodeData : ScriptableObject
     [Tooltip("Write formula using n for level, e.g. '1+1*(n-1)'")]
     public string costFormula = "1+1*(n-1)";
     public EnumCurrency costUnit;  // Type-safe dropdown for currency
+
+
+    [Header("Upgrade Information")]
+    public string description1;
+    public string description2;
 }
