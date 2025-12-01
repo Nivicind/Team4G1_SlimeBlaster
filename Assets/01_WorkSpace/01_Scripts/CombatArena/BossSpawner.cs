@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossSpawner : MonoBehaviour
 {
@@ -13,10 +14,12 @@ public class BossSpawner : MonoBehaviour
     public float spawnTime = 30f;       // Time before boss spawns
     public float moveSpeed = 3f;        // Boss movement speed
 
+    [Header("Progress Bar")]
+    public Image progressBar;           // Progress bar fill image
+
     private Camera mainCamera;
     private float timer = 0f;
     private bool bossSpawned = false;
-    private bool bossMoving = false;
     private Vector3 moveDirection;
     private float bossLifeTime = 180f;  // 3 minutes in seconds
     private float bossSpawnedTime = 0f;
@@ -28,7 +31,6 @@ public class BossSpawner : MonoBehaviour
         // Reset timer and flags
         timer = 0f;
         bossSpawned = false;
-        bossMoving = false;
         
         // Hide boss at start
         if (bossEnemy != null)
@@ -48,7 +50,6 @@ public class BossSpawner : MonoBehaviour
         // Reset state
         timer = 0f;
         bossSpawned = false;
-        bossMoving = false;
     }
 
     private void Update()
@@ -56,6 +57,12 @@ public class BossSpawner : MonoBehaviour
         if (!bossSpawned)
         {
             timer += Time.deltaTime;
+            
+            // Update progress bar fill amount
+            if (progressBar != null)
+            {
+                progressBar.fillAmount = timer / spawnTime;
+            }
             
             if (timer >= spawnTime)
             {
@@ -117,7 +124,6 @@ public class BossSpawner : MonoBehaviour
         if (bossEnemy != null)
         {
             bossEnemy.SetActive(false);
-            bossMoving = false;
             Debug.Log("Boss destroyed after 3 minutes!");
         }
     }

@@ -45,17 +45,18 @@ public class UpgradeButton : MonoBehaviour
 
     private void OnClick()
     {
-        if (!nodeInstance.CanUpgrade()) return;
-
-        // Show the upgrade popup instead of directly upgrading
+        // Show the upgrade popup (even if at max level to display info)
         if (uiController != null)
         {
             uiController.ShowUpgradePopup(nodeInstance, this);
         }
         else
         {
-            // Fallback: upgrade directly if no UI controller
-            PerformUpgrade();
+            // Fallback: only upgrade if can upgrade
+            if (nodeInstance.CanUpgrade())
+            {
+                PerformUpgrade();
+            }
         }
     }
 

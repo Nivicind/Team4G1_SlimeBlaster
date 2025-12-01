@@ -3,6 +3,13 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 
+[System.Serializable]
+public class CurrencyIcon
+{
+    public EnumCurrency currencyType;
+    public GameObject iconObject;
+}
+
 public class UIController : MonoBehaviour
 {
     [Header("Resource Panel")]
@@ -19,6 +26,9 @@ public class UIController : MonoBehaviour
     public TMP_Text moneyText;
     public Button confirmUpgradeButton;
     public PlayerStats playerStats;
+
+    [Header("Currency Icons")]
+    public CurrencyIcon[] currencyIcons;
 
     [Header("Resource Panel Animation")]
     public float resourcePanelMoveAmount = 195f;
@@ -40,11 +50,23 @@ public class UIController : MonoBehaviour
     public float confirmJiggleScale = 0.2f;
     public float confirmJiggleDuration = 0.3f;
 
+    [Header("Not Enough Money Flash")]
+    public Color flashColor = Color.red;
+    public float flashDuration = 0.5f;
+    public int flashCount = 1;
+    public float shakeStrength = 10f;
+    public int shakeVibrato = 20;
+    public float shakeRandomness = 90f;
+
+    [Header("Max Level Flash")]
+    public Color maxLevelFlashColor = Color.yellow;
+
     private bool isPanelOpen = false;
     private Vector3 originalPosition;
     private Vector3 popupOriginalPosition;
     private NodeInstance currentNodeInstance;
     private UpgradeButton currentUpgradeButton;
+    private Color originalMoneyTextColor;
 
     private void Start()
     {
@@ -70,6 +92,12 @@ public class UIController : MonoBehaviour
         if (confirmUpgradeButton != null)
         {
             confirmUpgradeButton.onClick.AddListener(ConfirmUpgrade);
+        }
+
+        // Store original money text color
+        if (moneyText != null)
+        {
+            originalMoneyTextColor = moneyText.color;
         }
     }
 
@@ -184,10 +212,25 @@ public class UIController : MonoBehaviour
 
         if (moneyText != null && playerStats != null)
         {
-            int cost = nodeInstance.GetCostForNextLevel();
-            int currentMoney = playerStats.GetCurrency(nodeInstance.data.costUnit);
-            moneyText.text = $"{currentMoney} / {cost}";
+            // Check if at max level
+            if (nodeInstance.currentLevel >= nodeInstance.data.maxLevel)
+            {
+                moneyText.text = "Max";
+            }
+            else
+            {
+                int cost = nodeInstance.GetCostForNextLevel();
+                int currentMoney = playerStats.GetCurrency(nodeInstance.data.costUnit);
+                moneyText.text = $"{currentMoney} / {cost}";
+            }
+            
+            // Reset money text color
+            moneyText.DOKill();
+            moneyText.color = originalMoneyTextColor;
         }
+
+        // Show/hide currency icons based on upgrade cost type
+        UpdateCurrencyIcons(nodeInstance.data.costUnit);
 
         // If already down, just update the info (no animation)
         if (isAlreadyDown)
@@ -219,8 +262,51 @@ public class UIController : MonoBehaviour
 
     private void ConfirmUpgrade()
     {
-        if (currentUpgradeButton != null)
+        if (currentUpgradeButton != null && currentNodeInstance != null)
         {
+            // Check if at max level
+            if (currentNodeInstance.currentLevel >= currentNodeInstance.data.maxLevel)
+            {
+                // Flash yellow once
+                if (moneyText != null)
+                {
+                    moneyText.DOKill();
+                    moneyText.color = originalMoneyTextColor;
+                    
+                    moneyText.DOColor(maxLevelFlashColor, flashDuration / 2)
+                        .SetLoops(2, LoopType.Yoyo)
+                        .OnComplete(() => moneyText.color = originalMoneyTextColor);
+                }
+                return;
+            }
+
+            // Check if player has enough money
+            int cost = currentNodeInstance.GetCostForNextLevel();
+            bool hasEnoughMoney = playerStats != null && playerStats.HasEnoughCurrency(currentNodeInstance.data.costUnit, cost);
+
+            if (!hasEnoughMoney)
+            {
+                // Flash money text red and shake if not enough money
+                if (moneyText != null)
+                {
+                    // Kill all tweens and reset
+                    moneyText.DOKill();
+                    moneyText.transform.DOKill();
+                    moneyText.color = originalMoneyTextColor;
+                    moneyText.transform.localPosition = Vector3.zero;
+                    moneyText.transform.rotation = Quaternion.identity;
+                    
+                    // Flash color
+                    moneyText.DOColor(flashColor, flashDuration / (flashCount * 2))
+                        .SetLoops(flashCount * 2, LoopType.Yoyo)
+                        .OnComplete(() => moneyText.color = originalMoneyTextColor);
+                    
+                    // Shake text
+                    moneyText.transform.DOShakePosition(flashDuration, strength: shakeStrength, vibrato: shakeVibrato, randomness: shakeRandomness);
+                }
+                return;
+            }
+
             // Kill any existing tweens on these objects to prevent stacking
             if (confirmUpgradeButton != null)
             {
@@ -248,6 +334,20 @@ public class UIController : MonoBehaviour
             if (currentNodeInstance != null)
             {
                 ShowUpgradePopup(currentNodeInstance, currentUpgradeButton);
+            }
+        }
+    }
+
+    private void UpdateCurrencyIcons(EnumCurrency activeCurrency)
+    {
+        if (currencyIcons == null) return;
+
+        foreach (var currencyIcon in currencyIcons)
+        {
+            if (currencyIcon.iconObject != null)
+            {
+                // Show only the icon matching the upgrade's currency type
+                currencyIcon.iconObject.SetActive(currencyIcon.currencyType == activeCurrency);
             }
         }
     }

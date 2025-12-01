@@ -1,39 +1,38 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerCombatArena : MonoBehaviour
 {
-    [Header("Stats")]
-    public PlayerStats playerStats;
+    [Header("References")]
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private PlayerCombatUI playerUI;
 
     [Header("Attack Settings")]
-    public LayerMask enemyLayer;
-    public float flashDuration = 0.1f;
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private float flashDuration = 0.1f;
 
     [Header("Currency Collection")]
-    public LayerMask currencyLayer;
-    public float currencyPickupRadius = 2f;
+    [SerializeField] private LayerMask currencyLayer;
+    [SerializeField] private float currencyPickupRadius = 2f;
 
     [Header("Movement Settings")]
-    public float moveSpeed = 10f;     // Speed for following mouse/finger
-
-    [Header("Combat Arena Temp Stats")]
-    public int currentHp;
-    public int currentExp;
-
-    [Header("UI")]
-    public Image healthBarImage;
-    public Image expBarImage;
-    public GameObject gameOverPanel;
-    public GameObject winPanel;
+    [SerializeField] private float moveSpeed = 10f;     // Speed for following mouse/finger
 
     [Header("Boss")]
-    public Boss bossEnemy;
+    [SerializeField] private Boss bossEnemy;
 
-    public SpriteRenderer rend;
+    [SerializeField] private SpriteRenderer rend;
+
+    // Combat Arena Temp Stats
+    private int currentHp;
+    private int currentExp;
     private Camera mainCamera;
     private bool isDead = false;
+
+    // Track collected currency during this run
+    private Dictionary<EnumCurrency, int> collectedCurrency = new Dictionary<EnumCurrency, int>();
 
     private void OnEnable() 
     {
@@ -43,11 +42,8 @@ public class PlayerCombatArena : MonoBehaviour
         transform.position = Vector3.zero;
         isDead = false;
         
-        // Hide UI panels
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-        if (winPanel != null)
-            winPanel.SetActive(false);
+        // Reset collected currency
+        collectedCurrency.Clear();
         
         // Initialize current stats from PlayerStats
         if (playerStats != null)
@@ -83,8 +79,6 @@ public class PlayerCombatArena : MonoBehaviour
             CheckCurrencyPickup();
             CheckBossDefeat();
         }
-        UpdateHealthBar();
-        UpdateExpBar();
     }
 
     private void CheckBossDefeat()
@@ -92,23 +86,21 @@ public class PlayerCombatArena : MonoBehaviour
         // Check if boss is defeated
         if (bossEnemy != null && bossEnemy.isDefeated)
         {
-            StartCoroutine(ShowWinAfterDelay());
+            ShowWin();
             bossEnemy = null; // Prevent checking multiple times
         }
     }
 
-    private IEnumerator ShowWinAfterDelay()
+    private void ShowWin()
     {
-        yield return new WaitForSeconds(3f);
-        
         isDead = true;
         
         // Move player out of scene
         transform.position = new Vector3(100f, 0f, 0f);
         
-        // Show win panel
-        if (winPanel != null)
-            winPanel.SetActive(true);
+        // Show win UI
+        if (playerUI != null)
+            playerUI.ShowWin();
         
         Debug.Log("Player won!");
     }
@@ -123,33 +115,18 @@ public class PlayerCombatArena : MonoBehaviour
             CurrencyControl currency = hit.GetComponent<CurrencyControl>();
             if (currency != null && !currency.IsFlying())
             {
+                // Track collected currency for this run
+                EnumCurrency currencyType = currency.currencyType;
+                if (!collectedCurrency.ContainsKey(currencyType))
+                    collectedCurrency[currencyType] = 0;
+                collectedCurrency[currencyType] += currency.currencyAmount;
+                
                 // Start flying towards player (currency will be added after 1 second)
                 currency.StartFlyingToPlayer(transform, playerStats);
             }
         }
     }
     
-    private void UpdateHealthBar()
-    {
-        if (healthBarImage != null && playerStats != null)
-        {
-            int maxHp = playerStats.GetStatValue(EnumStat.hp);
-            if (maxHp > 0)
-            {
-                float fillAmount = (float)currentHp / maxHp;
-                healthBarImage.fillAmount = Mathf.Clamp01(fillAmount);
-            }
-        }
-    }
-    private void UpdateExpBar()
-    {
-        if (expBarImage != null)
-        {
-            // Assuming max exp is 100 for now (you can change this logic)
-            float fillAmount = (float)currentExp / 100f;
-            expBarImage.fillAmount = Mathf.Clamp01(fillAmount);
-        }
-    }
     private void HandleMovement()
     {
         Vector3 targetPos = transform.position;
@@ -255,15 +232,20 @@ public class PlayerCombatArena : MonoBehaviour
     {
         isDead = true;
         
-        // Show death UI
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
+        // Show lose UI
+        if (playerUI != null)
+            playerUI.ShowLose();
         
         // Move player out of scene
         transform.position = new Vector3(100f, 0f, 0f);
         
         Debug.Log("Player died!");
     }
+
+    // Getter methods for UI
+    public int GetCurrentHp() => currentHp;
+    public int GetCurrentExp() => currentExp;
+    public Dictionary<EnumCurrency, int> GetCollectedCurrency() => collectedCurrency;
 
     private IEnumerator FlashAlpha()
     {

@@ -47,8 +47,8 @@ public class Boss : Enemy
         hasTarget = true;
     }
     
-    // Override Update to use boss movement instead of Enemy movement
-    private new void Update()
+    // Boss movement instead of Enemy movement
+    private void Update()
     {
         if (hasTarget)
         {
