@@ -10,9 +10,6 @@ public class Boss : Enemy
     
     protected override void OnEnable()
     {
-        // Don't call base.OnEnable() to avoid Enemy's movement setup
-        isDefeated = false;
-        // Initialize enemy health
         InitializeEnemy();
     }
     

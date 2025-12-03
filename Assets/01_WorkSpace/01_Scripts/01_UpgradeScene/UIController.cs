@@ -4,10 +4,10 @@ using DG.Tweening;
 using TMPro;
 
 [System.Serializable]
-public class CurrencyIcon
+public class CurrencySprite
 {
     public EnumCurrency currencyType;
-    public GameObject iconObject;
+    public TMP_SpriteAsset spriteAsset;
 }
 
 public class UIController : MonoBehaviour
@@ -27,8 +27,8 @@ public class UIController : MonoBehaviour
     public Button confirmUpgradeButton;
     public PlayerStats playerStats;
 
-    [Header("Currency Icons")]
-    public CurrencyIcon[] currencyIcons;
+    [Header("Currency Sprites")]
+    public CurrencySprite[] currencySprites;
 
     [Header("Resource Panel Animation")]
     public float resourcePanelMoveAmount = 195f;
@@ -207,7 +207,7 @@ public class UIController : MonoBehaviour
 
         if (levelText != null)
         {
-            levelText.text = $"{nodeInstance.currentLevel} / {nodeInstance.data.maxLevel}";
+            levelText.text = $"Lv. {nodeInstance.currentLevel} / {nodeInstance.data.maxLevel}";
         }
 
         if (moneyText != null && playerStats != null)
@@ -221,7 +221,7 @@ public class UIController : MonoBehaviour
             {
                 int cost = nodeInstance.GetCostForNextLevel();
                 int currentMoney = playerStats.GetCurrency(nodeInstance.data.costUnit);
-                moneyText.text = $"{currentMoney} / {cost}";
+                moneyText.text = $"<sprite index=0> {currentMoney} / {cost}";
             }
             
             // Reset money text color
@@ -229,8 +229,8 @@ public class UIController : MonoBehaviour
             moneyText.color = originalMoneyTextColor;
         }
 
-        // Show/hide currency icons based on upgrade cost type
-        UpdateCurrencyIcons(nodeInstance.data.costUnit);
+        // Update currency icon sprite based on upgrade cost type
+        UpdateCurrencyIcon(nodeInstance.data.costUnit);
 
         // If already down, just update the info (no animation)
         if (isAlreadyDown)
@@ -338,16 +338,17 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void UpdateCurrencyIcons(EnumCurrency activeCurrency)
+    private void UpdateCurrencyIcon(EnumCurrency activeCurrency)
     {
-        if (currencyIcons == null) return;
+        if (moneyText == null || currencySprites == null) return;
 
-        foreach (var currencyIcon in currencyIcons)
+        // Find and set the TMP sprite asset for the active currency
+        foreach (var currencySprite in currencySprites)
         {
-            if (currencyIcon.iconObject != null)
+            if (currencySprite.currencyType == activeCurrency && currencySprite.spriteAsset != null)
             {
-                // Show only the icon matching the upgrade's currency type
-                currencyIcon.iconObject.SetActive(currencyIcon.currencyType == activeCurrency);
+                moneyText.spriteAsset = currencySprite.spriteAsset;
+                return;
             }
         }
     }

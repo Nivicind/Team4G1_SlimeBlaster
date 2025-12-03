@@ -1641,7 +1641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &325388159
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1798,13 +1798,13 @@ MonoBehaviour:
   moneyText: {fileID: 380557006}
   confirmUpgradeButton: {fileID: 1017213525}
   playerStats: {fileID: 1707519697}
-  currencyIcons:
+  currencySprites:
   - currencyType: 0
-    iconObject: {fileID: 1688661437}
+    spriteAsset: {fileID: 11400000, guid: 896aaa42e7880114da45dd926dd6f567, type: 2}
   - currencyType: 1
-    iconObject: {fileID: 1111113608}
+    spriteAsset: {fileID: 11400000, guid: 4b2afeeb219ba6c4aa448254e86e15da, type: 2}
   - currencyType: 2
-    iconObject: {fileID: 1827747110}
+    spriteAsset: {fileID: 11400000, guid: e4f94f32ea31b1e40b56285ed7c2b65c, type: 2}
   resourcePanelMoveAmount: 228
   resourcePanelAnimationDuration: 0.5
   resourcePanelEaseType: 6
@@ -2642,7 +2642,7 @@ MonoBehaviour:
   bossEnemy: {fileID: 2042253924}
   currencyReference: {fileID: 991555930}
   targetPosition: {fileID: 1073533150}
-  spawnTime: 15
+  spawnTime: 4
   moveSpeed: 0.25
   progressBar: {fileID: 409961097}
 --- !u!1 &498976391 stripped
@@ -2837,7 +2837,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.203125
+  orthographic size: 6.6666665
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2882,10 +2882,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ComponentVersion: 1
   m_AssetsPPU: 32
-  m_RefResolutionX: 179
-  m_RefResolutionY: 403
+  m_RefResolutionX: 215
+  m_RefResolutionY: 183
   m_CropFrame: 0
-  m_GridSnapping: 1
+  m_GridSnapping: 0
   m_FilterMode: 0
   m_UpscaleRT: 0
   m_PixelSnapping: 0
@@ -4331,7 +4331,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.999997, y: 315}
+  m_AnchoredPosition: {x: 0, y: 315}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1017213525
@@ -5551,7 +5551,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1194132568
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7261,7 +7261,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12, y: 400}
+  m_AnchoredPosition: {x: 0, y: 400}
   m_SizeDelta: {x: 250, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1575483071
@@ -7667,7 +7667,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1781239669
 Transform:
   m_ObjectHideFlags: 0

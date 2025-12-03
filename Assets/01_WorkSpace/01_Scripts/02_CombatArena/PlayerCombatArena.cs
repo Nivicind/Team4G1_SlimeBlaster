@@ -42,6 +42,7 @@ public class PlayerCombatArena : MonoBehaviour
         if (bossEnemy == null)
         {
             bossEnemy = FindObjectOfType<Boss>(true);
+            bossEnemy.isDefeated = false;
         }
         
         // Reset player position and state
