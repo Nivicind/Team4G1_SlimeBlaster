@@ -60,9 +60,9 @@ public class PlayerStats : MonoBehaviour
         statsDict[EnumStat.additionalRedBitsDropPerEnemy] = 0;
         statsDict[EnumStat.spawnRatePercent] = 100;
 
-        currencyDict[EnumCurrency.blueBits] = 500;
-        currencyDict[EnumCurrency.pinkBits] = 0;
-        currencyDict[EnumCurrency.redBits] = 0;
+        currencyDict[EnumCurrency.blueBits] = 10000000;
+        currencyDict[EnumCurrency.pinkBits] = 10000000;
+        currencyDict[EnumCurrency.redBits] = 10000000;
     }
     private void UpdateValueToInspector()
     {

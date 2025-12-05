@@ -2927,8 +2927,8 @@ RectTransform:
   - {fileID: 1194132568}
   - {fileID: 621301417}
   - {fileID: 2068995249}
-  - {fileID: 217063239}
   - {fileID: 1383067629}
+  - {fileID: 217063239}
   - {fileID: 626641878}
   m_Father: {fileID: 1742417261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3096,7 +3096,7 @@ GameObject:
   - component: {fileID: 621301419}
   - component: {fileID: 621301420}
   m_Layer: 5
-  m_Name: UpgradeScene
+  m_Name: AllUpgradeNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
