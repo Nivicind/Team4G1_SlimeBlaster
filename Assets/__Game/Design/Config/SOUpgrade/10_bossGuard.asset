@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: boss guard
   description: '''+[int] boss armor'
-  icon: {fileID: 21300000, guid: 1e520f0cdc6d6e345a9a9f048a57dc20, type: 3}
+  icon: {fileID: 21300000, guid: ea8804c2bf7e44841be296f42e159a29, type: 3}
   stat: 8
   perUpgradeValue: 1
   maxLevel: 10
   costFormula: 15+1*(n-1)
   costUnit: 2
+  description1: 
+  description2: 

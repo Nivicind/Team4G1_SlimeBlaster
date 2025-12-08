@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: endurance
   description: '''+[int] max health'
-  icon: {fileID: 21300000, guid: 09d007310c2c4cc4ab09b722fad7b737, type: 3}
+  icon: {fileID: 21300000, guid: 53c62aba6902562408c878b35b20c7c3, type: 3}
   stat: 0
   perUpgradeValue: 4
   maxLevel: 10
   costFormula: 2+1*(n-1)
   costUnit: 0
+  description1: 
+  description2: 

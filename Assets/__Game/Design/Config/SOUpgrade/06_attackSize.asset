@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: attack size
   description: +[int]% attack size
-  icon: {fileID: 21300000, guid: 3d41e7c2feab38945b46f1b44e026e05, type: 3}
+  icon: {fileID: 21300000, guid: 4629a3fb260f83740a66f3ff8f16cac2, type: 3}
   stat: 3
   perUpgradeValue: 10
   maxLevel: 10
   costFormula: 10+1*(n-1)
   costUnit: 0
+  description1: 
+  description2: 

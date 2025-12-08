@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: swarming
   description: '''+[int]% spawn rate'
-  icon: {fileID: 21300000, guid: 67ced9838c646084f9716502ad72c772, type: 3}
+  icon: {fileID: 21300000, guid: eb11261491eeefa479edb72eadb7ccb2, type: 3}
   stat: 14
   perUpgradeValue: 200
   maxLevel: 1
   costFormula: 1
   costUnit: 2
+  description1: 
+  description2: 
