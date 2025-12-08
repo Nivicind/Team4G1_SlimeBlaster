@@ -27,15 +27,15 @@ RectTransform:
   m_GameObject: {fileID: 728572940308476820}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3973322, y: 0.17354238, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 26.369999, y: 3.2750354, z: 18.871675}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2328577055588868171}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 12}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &620656512578769307
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ba49732648f71e44b62b54764e3105b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a592d986254fe1a4fb3a6537b9eb7c70, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -127,7 +127,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.95
+  m_Radius: 9.62
 --- !u!212 &3486340649797994145
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: b61900a7d4b573941adaf80ca70fdf74, type: 2}
-  moveSpeed: 0.5
+  moveSpeed: 4
   pool: {fileID: 0}
   spawner: {fileID: 0}
   currencyReference: {fileID: 0}

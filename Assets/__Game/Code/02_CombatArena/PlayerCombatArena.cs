@@ -10,6 +10,7 @@ public class PlayerCombatArena : MonoBehaviour
     [SerializeField] private PlayerCombatUI playerUI;
 
     [Header("Attack Settings")]
+    [SerializeField] private Vector2 attackRange = new Vector2(5f, 5f);
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private float flashDuration = 0.1f;
 
@@ -199,7 +200,7 @@ public class PlayerCombatArena : MonoBehaviour
     private void Attack()
     {
         // Detect all 2D colliders inside the box
-        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, transform.localScale, 0f, enemyLayer);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, attackRange, 0f, enemyLayer);
 
         int damage = playerStats.GetStatValue(EnumStat.damage);
         int baseReflection = playerStats.GetStatValue(EnumStat.baseReflection);
@@ -281,7 +282,7 @@ public class PlayerCombatArena : MonoBehaviour
     {
         // Draw attack range (box)
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, transform.localScale);
+        Gizmos.DrawWireCube(transform.position, attackRange);
         
         // Draw currency pickup range (circle)
         Gizmos.color = Color.yellow;
