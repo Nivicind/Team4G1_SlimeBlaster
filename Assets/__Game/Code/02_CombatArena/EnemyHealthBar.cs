@@ -6,6 +6,10 @@ public class EnemyHealthBar : MonoBehaviour
     [Header("UI")]
     public Image healthBarImage;
     public GameObject liquidMask;
+    
+    [Header("Liquid Mask Settings")]
+    public float minY = 1.9f; // Y position at 0% health
+    public float maxY = 10.5f; // Y position at 100% health
 
     private Enemy enemy;
     private int maxHealth;
@@ -35,8 +39,7 @@ public class EnemyHealthBar : MonoBehaviour
         if (liquidMask != null && enemy != null && maxHealth > 0)
         {
             float healthPercent = (float)enemy.currentHealth / maxHealth;
-            // 📊 Max health (100%) = y: 10.5, No health (0%) = y: 1.9
-            float targetY = Mathf.Lerp(1.9f, 10.5f, healthPercent);
+            float targetY = Mathf.Lerp(minY, maxY, healthPercent);
             Vector3 position = liquidMask.transform.localPosition;
             position.y = targetY;
             liquidMask.transform.localPosition = position;

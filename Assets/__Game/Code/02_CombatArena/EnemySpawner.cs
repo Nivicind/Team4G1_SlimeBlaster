@@ -1,14 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct EnemySpawnEntry
+{
+    public ObjectPool enemyPool;
+    public SOEnemyData enemyData;
+}
+
 public class EnemySpawner : MonoBehaviour
 {
     [Header("References")]
-    public ObjectPool enemyPool;           // Pool that contains prefab
     public PlayerStats playerStats;        // For spawn rate
     public BoxCollider2D targetArea;       // Area enemies move toward
     public StoreCurrencyReference currencyReference;  // Currency pools reference
-    public List<SOEnemyData> enemiesToSpawn;
+    public List<EnemySpawnEntry> EnemyData;
 
     [Header("Spawn Settings")]
     public float spawnBuffer = 0.5f;       // How far outside camera to spawn
@@ -26,45 +32,44 @@ public class EnemySpawner : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        foreach (var data in enemiesToSpawn)
+        foreach (var entry in EnemyData)
         {
-            if (Time.timeSinceLevelLoad < data.startTime) continue;
+            if (Time.timeSinceLevelLoad < entry.enemyData.startTime) continue;
 
-            float adjustedInterval = data.spawnInterval / Mathf.Max(0.01f, playerStats.GetStatValue(EnumStat.spawnRatePercent) / 100f);
+            float adjustedInterval = entry.enemyData.spawnInterval / Mathf.Max(0.01f, playerStats.GetStatValue(EnumStat.spawnRatePercent) / 100f);
             if (timer >= adjustedInterval)
             {
-                SpawnEnemyType(data);
+                SpawnEnemyType(entry);
             }
         }
 
         if (timer >= GetMaxInterval()) timer = 0f;
     }
 
-    private void SpawnEnemyType(SOEnemyData data)
+    private void SpawnEnemyType(EnemySpawnEntry entry)
     {
         // Clean null or inactive references
         activeEnemies.RemoveAll(e => e == null || !e.gameObject.activeInHierarchy);
 
         // Count current active enemies of this type
-        int activeCount = activeEnemies.FindAll(e => e.enemyData == data).Count;
+        int activeCount = activeEnemies.FindAll(e => e.enemyData == entry.enemyData).Count;
 
         // Calculate how many can actually spawn (respect maxCapacity)
-        int canSpawn = data.spawnAmount;
-        if (data.maxCapacity > 0)
-            canSpawn = Mathf.Min(data.spawnAmount, data.maxCapacity - activeCount);
+        int canSpawn = entry.enemyData.spawnAmount;
+        if (entry.enemyData.maxCapacity > 0)
+            canSpawn = Mathf.Min(entry.enemyData.spawnAmount, entry.enemyData.maxCapacity - activeCount);
 
         if (canSpawn <= 0) return;
 
         for (int i = 0; i < canSpawn; i++)
         {
             Vector2 spawnPos = GetRandomPositionOutsideCamera();
-            GameObject enemyObj = enemyPool.Get(spawnPos, Quaternion.identity);
+            GameObject enemyObj = entry.enemyPool.Get(spawnPos, Quaternion.identity);
             Enemy enemyScript = enemyObj.GetComponent<Enemy>();
 
             if (enemyScript != null)
             {
-                enemyScript.enemyData = data;
-                enemyScript.pool = enemyPool;
+                enemyScript.pool = entry.enemyPool;
                 enemyScript.spawner = this;
                 enemyScript.currencyReference = currencyReference;
                 activeEnemies.Add(enemyScript);
@@ -75,8 +80,8 @@ public class EnemySpawner : MonoBehaviour
     private float GetMaxInterval()
     {
         float max = 0f;
-        foreach (var data in enemiesToSpawn)
-            max = Mathf.Max(max, data.spawnInterval);
+        foreach (var entry in EnemyData)
+            max = Mathf.Max(max, entry.enemyData.spawnInterval);
         return max;
     }
 

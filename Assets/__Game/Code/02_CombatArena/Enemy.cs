@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
 
     public int currentHealth { get; private set; }
     private Camera mainCamera;
+    private SlimeAnimation slimeAnim;
     private bool justSpawned = true;
     private float spawnIgnoreTime = 3f;
     private Vector2 moveDirection;
@@ -21,20 +22,15 @@ public class Enemy : MonoBehaviour
     protected virtual void OnEnable()
     {
         mainCamera = Camera.main;
+        slimeAnim = GetComponent<SlimeAnimation>();
         InitializeEnemy();
         justSpawned = true;
 
-        // Calculate direction toward center of target area, then move toward opposite side
+        // Move toward a random point inside the target area
         if (spawner != null)
         {
-            Vector2 targetAreaCenter = spawner.targetArea.bounds.center;
-            Vector2 directionToCenter = (targetAreaCenter - (Vector2)transform.position).normalized;
-            
-            // Pick a point on the opposite side of the target area
-            Bounds bounds = spawner.targetArea.bounds;
-            Vector2 oppositePoint = targetAreaCenter + directionToCenter * (bounds.extents.magnitude);
-            
-            moveDirection = (oppositePoint - (Vector2)transform.position).normalized;
+            Vector2 targetPoint = spawner.GetRandomPointInsideTargetArea();
+            moveDirection = (targetPoint - (Vector2)transform.position).normalized;
         }
         else
         {
@@ -100,6 +96,11 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        
+        // Play hurt animation
+        if (slimeAnim != null)
+            slimeAnim.Hurt();
+        
         if (currentHealth <= 0)
             Die();
     }
