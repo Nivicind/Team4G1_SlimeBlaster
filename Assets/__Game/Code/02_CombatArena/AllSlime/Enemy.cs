@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
         transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
     }
 
-    private void CheckOffscreen()
+    protected void CheckOffscreen()
     {
         if (justSpawned) return;
 

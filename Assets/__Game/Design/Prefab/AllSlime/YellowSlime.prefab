@@ -554,7 +554,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5632783557099033302}
   - component: {fileID: 1424333516432531879}
-  - component: {fileID: 7487713777205826995}
+  - component: {fileID: 1442441381795384136}
   - component: {fileID: 4581018765012801027}
   - component: {fileID: 2681076376904291765}
   - component: {fileID: 7686171798584717038}
@@ -599,7 +599,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.85}
   serializedVersion: 2
   m_Radius: 5
---- !u!114 &7487713777205826995
+--- !u!114 &1442441381795384136
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -608,15 +608,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7570439101151105090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 460fe788c9bc64849aeb18885b5aef49, type: 3}
+  m_Script: {fileID: 11500000, guid: 4de3350172a87254aa3fc6dcc877ac7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 4fd8055f4908b1f42a84d37a5d458342, type: 2}
-  moveSpeed: 3
+  moveSpeed: 2
   pool: {fileID: 0}
   spawner: {fileID: 0}
   currencyReference: {fileID: 0}
+  playerStats: {fileID: 0}
   targetPosition: {x: 0, y: 0}
+  circleRadius: 61.62
+  circleSpeed: 0.2
 --- !u!114 &4581018765012801027
 MonoBehaviour:
   m_ObjectHideFlags: 0
