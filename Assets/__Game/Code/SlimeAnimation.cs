@@ -10,11 +10,13 @@ public class SlimeAnimation : MonoBehaviour
     public List<Sprite> hurt;
     public List<Sprite> hollowed;
     public List<Sprite> inside;
+    public List<Sprite> spriteMask;
 
     [Header("Sprite Renderers")]
     public SpriteRenderer mainSpriteRenderer; // Shared by idle, blink, hurt
     public SpriteRenderer liquidSpriteRenderer;
     public SpriteRenderer hollowedSpriteRenderer;
+    public SpriteMask spriteMaskRenderer;
 
     [Header("Sorting")]
     public UnityEngine.Rendering.SortingGroup sortingGroup;
@@ -63,6 +65,7 @@ public class SlimeAnimation : MonoBehaviour
         // Update all animations with synchronized frame
         UpdateSyncedAnimation(hollowed, hollowedSpriteRenderer);
         UpdateSyncedAnimation(inside, liquidSpriteRenderer);
+        UpdateSyncedSpriteMask(spriteMask, spriteMaskRenderer);
         UpdateMainAnimation();
     }
 
@@ -87,6 +90,21 @@ public class SlimeAnimation : MonoBehaviour
         
         int frame = currentFrame % spriteList.Count;
         renderer.sprite = spriteList[frame];
+    }
+
+    void UpdateSyncedSpriteMask(List<Sprite> spriteList, SpriteMask mask)
+    {
+        if (spriteList == null || spriteList.Count == 0 || mask == null) return;
+        
+        // If only 1 sprite, just display it (no animation)
+        if (spriteList.Count == 1)
+        {
+            mask.sprite = spriteList[0];
+            return;
+        }
+        
+        int frame = currentFrame % spriteList.Count;
+        mask.sprite = spriteList[frame];
     }
 
     void UpdateMainAnimation()

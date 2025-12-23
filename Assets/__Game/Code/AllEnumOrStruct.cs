@@ -18,6 +18,7 @@ public enum EnumStat
     additionalBlueBitsDropPerEnemy,
     additionalPinkBitsDropPerEnemy,
     additionalYellowBitsDropPerEnemy,
+    additionalGreenBitsDropPerEnemy,
     spawnRatePercent,
     baseHp,
     baseDamage,
@@ -28,5 +29,6 @@ public enum EnumCurrency
 {
     blueBits,
     pinkBits,
-    yellowBits
+    yellowBits,
+    greenBits
 }

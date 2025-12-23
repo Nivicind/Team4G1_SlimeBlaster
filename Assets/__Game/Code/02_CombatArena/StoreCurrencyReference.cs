@@ -6,6 +6,7 @@ public class StoreCurrencyReference : MonoBehaviour
     public ObjectPool blueBitsCurrencyPool;
     public ObjectPool pinkBitsCurrencyPool;
     public ObjectPool yellowBitsCurrencyPool;
+    public ObjectPool greenBitsCurrencyPool;
 
     public ObjectPool GetCurrencyPool(EnumCurrency currencyType)
     {
@@ -17,6 +18,8 @@ public class StoreCurrencyReference : MonoBehaviour
                 return blueBitsCurrencyPool;
             case EnumCurrency.pinkBits:
                 return pinkBitsCurrencyPool;
+            case EnumCurrency.greenBits:
+                return greenBitsCurrencyPool;
             default:
                 return null;
         }

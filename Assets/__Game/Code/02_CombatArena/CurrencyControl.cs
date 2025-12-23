@@ -10,6 +10,7 @@ public class CurrencyControl : MonoBehaviour
     public float maxSpeed = 15f;
     public float acceleration = 5f;
     public float flyTime = 1f;
+    public float pickupDistance = 0.25f;
 
     [HideInInspector] public ObjectPool pool;
     [HideInInspector] public PlayerStats playerStats;
@@ -53,7 +54,7 @@ public class CurrencyControl : MonoBehaviour
             transform.position += direction * currentSpeed * Time.deltaTime;
 
             // Check if reached player (disappear immediately)
-            if (Vector3.Distance(transform.position, targetPlayer.position) < 0.25f)
+            if (Vector3.Distance(transform.position, targetPlayer.position) < pickupDistance)
             {
                 if (!currencyAdded && playerStats != null)
                 {
@@ -96,5 +97,18 @@ public class CurrencyControl : MonoBehaviour
         pool?.ReturnToPool(gameObject);
     }
 
+    private void OnDrawGizmos()
+    {
+        // Always draw the pickup radius in editor
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, pickupDistance);
+        
+        // Draw line to player only when flying
+        if (isFlying && targetPlayer != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, targetPlayer.position);
+        }
+    }
 
 }

@@ -41,7 +41,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6478006035520193652}
   - component: {fileID: 516479846953043594}
-  - component: {fileID: 6792262875354886017}
   m_Layer: 0
   m_Name: LiqidMask
   m_TagString: Untagged
@@ -115,28 +114,6 @@ SpriteMask:
   m_BackSortingOrder: 0
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
---- !u!114 &6792262875354886017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 521038023650693047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 227fe58459dd75244b46e3c09c9bf372, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frames:
-  - {fileID: 21300000, guid: ad61055f13d3a6c4eb10f67ee365777c, type: 3}
-  - {fileID: 21300000, guid: 50f681f127a139e41870938e1377ff77, type: 3}
-  - {fileID: 21300000, guid: af61070d8c24d074fa28d6c4460aa94d, type: 3}
-  - {fileID: 21300000, guid: f156b3ec79b73c54087db082e318572c, type: 3}
-  - {fileID: 21300000, guid: 862fc2b1b48e5ca4982eaf053531e6be, type: 3}
-  - {fileID: 21300000, guid: ec6cfa42ab8e4d84194fa4bedd6a76df, type: 3}
-  - {fileID: 21300000, guid: 67b07a54c5bf5fd4db5c2def01aa0f27, type: 3}
-  - {fileID: 21300000, guid: 8941f0125a379464992ccc61f01d69ad, type: 3}
-  frameTime: 0.1
 --- !u!1 &728572940308476820
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5632783557099033302}
   - component: {fileID: 1424333516432531879}
-  - component: {fileID: 7487713777205826995}
+  - component: {fileID: 4724803499225229519}
   - component: {fileID: 4581018765012801027}
   - component: {fileID: 2681076376904291765}
   - component: {fileID: -1743314342826698164}
@@ -630,7 +607,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -1.57}
   serializedVersion: 2
   m_Radius: 10.61
---- !u!114 &7487713777205826995
+--- !u!114 &4724803499225229519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -639,15 +616,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 7570439101151105090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 460fe788c9bc64849aeb18885b5aef49, type: 3}
+  m_Script: {fileID: 11500000, guid: b713bba8c89b3154d93d3cbf62d7e175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 7ba19efbeefb6f6469eccdea42a654d1, type: 2}
-  moveSpeed: 3
+  moveSpeed: 2
   pool: {fileID: 0}
   spawner: {fileID: 0}
   currencyReference: {fileID: 0}
+  playerStats: {fileID: 0}
   targetPosition: {x: 0, y: 0}
+  possibleDrops:
+  - currencyType: 0
+    baseAmount: 10
+  - currencyType: 0
+    baseAmount: 1
+  - currencyType: 2
+    baseAmount: 1
 --- !u!114 &4581018765012801027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -686,9 +671,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fca6ed0be292a214e9032da4394129d5, type: 3}
   inside:
   - {fileID: 21300000, guid: a0b1e7a2fa60fe148b6b6e584f9a60dc, type: 3}
+  spriteMask: []
   mainSpriteRenderer: {fileID: 6059096826792847171}
   liquidSpriteRenderer: {fileID: 3531367931267048361}
   hollowedSpriteRenderer: {fileID: 7134955277251930240}
+  spriteMaskRenderer: {fileID: 516479846953043594}
   sortingGroup: {fileID: -1743314342826698164}
   feet: {fileID: 4088373337813880927}
   frameChangeDuration: 0.1

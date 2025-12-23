@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     private SlimeAnimation slimeAnim;
     private bool justSpawned = true;
     private float spawnIgnoreTime = 3f;
+    private Vector2 direction;
+    private bool directionSet = false;
 
     protected virtual void OnEnable()
     {
@@ -26,15 +28,17 @@ public class Enemy : MonoBehaviour
         slimeAnim = GetComponent<SlimeAnimation>();
         InitializeEnemy();
         justSpawned = true;
+        directionSet = false;
         Invoke(nameof(DisableJustSpawned), spawnIgnoreTime);
     }
 
     protected virtual void OnDisable()
     {
+        
         ReturnToPool();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         MoveToTarget();
         CheckOffscreen();
@@ -51,7 +55,11 @@ public class Enemy : MonoBehaviour
 
     private void MoveToTarget()
     {
-        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+        if (!directionSet)
+        {
+            direction = (targetPosition - (Vector2)transform.position).normalized;
+            directionSet = true;
+        }
         transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
     }
 
@@ -76,7 +84,7 @@ public class Enemy : MonoBehaviour
                 viewPos.y >= -buffer && viewPos.y <= 1 + buffer);
     }
 
-    private void ReturnToPool()
+    protected void ReturnToPool()
     {
         pool?.ReturnToPool(gameObject);
         spawner?.RemoveEnemyFromActiveList(this);
@@ -108,7 +116,7 @@ public class Enemy : MonoBehaviour
         ReturnToPool();
     }
 
-    private void GiveExpToPlayer()
+    protected void GiveExpToPlayer()
     {
         if (enemyData == null || playerStats == null) return;
 
@@ -144,15 +152,37 @@ public class Enemy : MonoBehaviour
                 case EnumCurrency.yellowBits:
                     additionalAmount = spawner.playerStats.GetStatValue(EnumStat.additionalYellowBitsDropPerEnemy);
                     break;
+                case EnumCurrency.greenBits:
+                    additionalAmount = spawner.playerStats.GetStatValue(EnumStat.additionalGreenBitsDropPerEnemy);
+                    break;
             }
         }
         
         int totalAmount = baseAmount + additionalAmount;
         
+        // Get collider bounds
+        Collider2D col = GetComponent<Collider2D>();
+        
         for (int i = 0; i < totalAmount; i++)
         {
-            // Spawn currency at enemy position with slight random offset
-            Vector3 spawnPos = transform.position + (Vector3)Random.insideUnitCircle * 0.5f;
+            Vector3 spawnPos;
+            
+            if (col != null)
+            {
+                // Spawn random position inside collider bounds
+                Bounds bounds = col.bounds;
+                spawnPos = new Vector3(
+                    Random.Range(bounds.min.x, bounds.max.x),
+                    Random.Range(bounds.min.y, bounds.max.y),
+                    transform.position.z
+                );
+            }
+            else
+            {
+                // Fallback if no collider
+                spawnPos = transform.position + (Vector3)Random.insideUnitCircle * 0.5f;
+            }
+            
             GameObject currencyObj = selectedPool.Get(spawnPos, Quaternion.identity);
             
             // Set the pool reference so it can return to pool

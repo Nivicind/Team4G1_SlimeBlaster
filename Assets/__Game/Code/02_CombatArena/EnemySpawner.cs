@@ -187,4 +187,13 @@ public class EnemySpawner : MonoBehaviour
     {
         activeEnemies.Remove(enemy);
     }
+    
+    // Called when splitting enemies to add children to active list
+    public void AddEnemyToActiveList(Enemy enemy)
+    {
+        if (!activeEnemies.Contains(enemy))
+        {
+            activeEnemies.Add(enemy);
+        }
+    }
 }

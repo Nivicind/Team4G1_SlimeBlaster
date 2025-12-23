@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: fireWall
   description: 
   icon: {fileID: 21300000, guid: 19f1045598d48154283846f9a9ba8909, type: 3}
-  stat: 7
+  stat: 8
   perUpgradeValue: 1
   maxLevel: 10
   costFormula: 8+1*(n-1)

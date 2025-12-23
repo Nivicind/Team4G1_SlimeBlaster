@@ -28,12 +28,14 @@ public class PlayerStats : MonoBehaviour
     public int additionalBlueBitsDropPerEnemy = 0;  //ok
     public int additionalPinkBitsDropPerEnemy = 0; //ok
     public int additionalYellowBitsDropPerEnemy = 0;  //ok
+    public int additionalGreenBitsDropPerEnemy = 0;  //ok
     public int spawnRatePercent = 100; //ok
 
     [Header("Currencies (Inspector)")]
     public int blueBits = 1000;
     public int pinkBits = 1000;
     public int yellowBits = 1000;
+    public int greenBits = 1000;
     #endregion
 
     // Runtime dictionaries
@@ -73,11 +75,13 @@ public class PlayerStats : MonoBehaviour
         statsDict[EnumStat.additionalBlueBitsDropPerEnemy] = 0;
         statsDict[EnumStat.additionalPinkBitsDropPerEnemy] = 0;
         statsDict[EnumStat.additionalYellowBitsDropPerEnemy] = 0;
+        statsDict[EnumStat.additionalGreenBitsDropPerEnemy] = 0;
         statsDict[EnumStat.spawnRatePercent] = 100;
 
         currencyDict[EnumCurrency.blueBits] = 1000;
         currencyDict[EnumCurrency.pinkBits] = 1000;
         currencyDict[EnumCurrency.yellowBits] = 1000;
+        currencyDict[EnumCurrency.greenBits] = 1000;
     }
     private void UpdateValueToInspector()
     {
@@ -103,11 +107,13 @@ public class PlayerStats : MonoBehaviour
         additionalBlueBitsDropPerEnemy = statsDict[EnumStat.additionalBlueBitsDropPerEnemy];
         additionalPinkBitsDropPerEnemy = statsDict[EnumStat.additionalPinkBitsDropPerEnemy];
         additionalYellowBitsDropPerEnemy = statsDict[EnumStat.additionalYellowBitsDropPerEnemy];
+        additionalGreenBitsDropPerEnemy = statsDict[EnumStat.additionalGreenBitsDropPerEnemy];
         spawnRatePercent = statsDict[EnumStat.spawnRatePercent];
 
         blueBits = currencyDict[EnumCurrency.blueBits];
         pinkBits = currencyDict[EnumCurrency.pinkBits];
         yellowBits = currencyDict[EnumCurrency.yellowBits];
+        greenBits = currencyDict[EnumCurrency.greenBits];
     }
 
     // Runtime methods

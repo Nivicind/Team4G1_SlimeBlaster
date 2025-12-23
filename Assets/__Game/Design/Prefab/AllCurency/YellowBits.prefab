@@ -119,5 +119,6 @@ MonoBehaviour:
   maxSpeed: 120
   acceleration: 40
   flyTime: 0.75
+  pickupDistance: 3
   pool: {fileID: 0}
   playerStats: {fileID: 0}

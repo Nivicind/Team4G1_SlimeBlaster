@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: crowding
   description: '''+[int] SpawenRate'
   icon: {fileID: 21300000, guid: 3db8b0b982702324ea72c5ec40e0aceb, type: 3}
-  stat: 14
+  stat: 17
   perUpgradeValue: 50
   maxLevel: 15
   costFormula: 2+1*(n-1)

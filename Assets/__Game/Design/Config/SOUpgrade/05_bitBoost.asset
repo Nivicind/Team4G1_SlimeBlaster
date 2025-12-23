@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: bitBoost
   description: red enemies drop +[int] bits
   icon: {fileID: 21300000, guid: a3b8e14bef44cb44ba1cb753c3c9677d, type: 3}
-  stat: 13
+  stat: 14
   perUpgradeValue: 1
   maxLevel: 1
   costFormula: 1

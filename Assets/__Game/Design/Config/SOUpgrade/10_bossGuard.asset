@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: boss guard
   description: '''+[int] boss armor'
   icon: {fileID: 21300000, guid: ea8804c2bf7e44841be296f42e159a29, type: 3}
-  stat: 8
+  stat: 9
   perUpgradeValue: 1
   maxLevel: 5
   costFormula: 15+1*(n-1)
