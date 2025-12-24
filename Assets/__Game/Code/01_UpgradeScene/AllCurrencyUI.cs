@@ -10,6 +10,7 @@ public class AllCurrencyUI : MonoBehaviour
     public TextMeshProUGUI blueBitsText;
     public TextMeshProUGUI pinkBitsText;
     public TextMeshProUGUI yellowBitsText;
+    public TextMeshProUGUI greenBitsText;
 
 
     void Update()
@@ -19,11 +20,14 @@ public class AllCurrencyUI : MonoBehaviour
         // Update all three currency text fields
         if (blueBitsText != null)
             blueBitsText.text = playerStats.blueBits.ToString();
-        
+
         if (pinkBitsText != null)
             pinkBitsText.text = playerStats.pinkBits.ToString();
-        
+
         if (yellowBitsText != null)
             yellowBitsText.text = playerStats.yellowBits.ToString();
+
+        if (greenBitsText != null)
+            greenBitsText.text = playerStats.greenBits.ToString();
     }
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   hp: 50
   baseReflectionMultiplier: 1
   exp: 10
-  currencyType: 2
+  currencyType: 3
   baseCurrencyAmount: 1
   spawnAmount: 1
   spawnInterval: 2
