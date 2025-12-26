@@ -21,11 +21,17 @@ public class Enemy : MonoBehaviour
     private float spawnIgnoreTime = 3f;
     private Vector2 direction;
     private bool directionSet = false;
+    private PlayerCombatArena playerCombatArena; // 🎮 Cached reference for healing on kill
 
     protected virtual void OnEnable()
     {
         mainCamera = Camera.main;
         slimeAnim = GetComponent<SlimeAnimation>();
+        
+        // 🎮 Auto-find PlayerCombatArena for heal on kill
+        if (playerCombatArena == null)
+            playerCombatArena = FindObjectOfType<PlayerCombatArena>();
+        
         InitializeEnemy();
         justSpawned = true;
         directionSet = false;
@@ -113,7 +119,22 @@ public class Enemy : MonoBehaviour
     {
         GiveExpToPlayer();
         SpawnCurrency();
+        HealPlayerOnKill();
         ReturnToPool();
+    }
+
+    /// <summary>
+    /// 💚 Heal player when this enemy is killed
+    /// </summary>
+    protected void HealPlayerOnKill()
+    {
+        if (playerStats == null || playerCombatArena == null) return;
+        
+        int healAmount = playerStats.GetStatValue(EnumStat.addHealthPerEnemyKill);
+        if (healAmount > 0)
+        {
+            playerCombatArena.HealPlayer(healAmount);
+        }
     }
 
     protected void GiveExpToPlayer()

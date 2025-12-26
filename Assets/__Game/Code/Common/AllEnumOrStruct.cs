@@ -22,7 +22,10 @@ public enum EnumStat
     spawnRatePercent,
     baseHp,
     baseDamage,
-    baseArmor
+    baseArmor,
+    addHealthPerEnemyHit,  // 💚 Heal HP per enemy hit
+    addHealthPerEnemyKill,  // 💚 Heal HP per enemy killed
+    currencyPickupRadiusIncreasePercent  // 🧲 Increase pickup radius by %
 }
 
 public enum EnumCurrency

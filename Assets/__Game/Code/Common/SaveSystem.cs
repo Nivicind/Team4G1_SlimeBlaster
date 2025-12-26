@@ -205,7 +205,63 @@ public class SaveSystem : Singleton<SaveSystem>
     }
 
     /// <summary>
-    /// 🗑️ Delete save file (for testing)
+    /// � Save currency by type
+    /// </summary>
+    public void SaveCurrency(EnumCurrency currencyType, int amount)
+    {
+        if (currentSaveData == null)
+            currentSaveData = LoadGame();
+
+        switch (currencyType)
+        {
+            case EnumCurrency.yellowBits: currentSaveData.yellowBits = amount; break;
+            case EnumCurrency.blueBits: currentSaveData.blueBits = amount; break;
+            case EnumCurrency.pinkBits: currentSaveData.pinkBits = amount; break;
+            case EnumCurrency.greenBits: currentSaveData.greenBits = amount; break;
+        }
+        
+        SaveGame(currentSaveData);
+        Debug.Log($"💰 {currencyType} saved: {amount}");
+    }
+
+    /// <summary>
+    /// 💰 Save all currencies from PlayerStats
+    /// </summary>
+    public void SaveAllCurrenciesFromPlayerStats(PlayerStats playerStats)
+    {
+        if (playerStats == null) return;
+        if (currentSaveData == null)
+            currentSaveData = LoadGame();
+        
+        currentSaveData.yellowBits = playerStats.GetCurrency(EnumCurrency.yellowBits);
+        currentSaveData.blueBits = playerStats.GetCurrency(EnumCurrency.blueBits);
+        currentSaveData.pinkBits = playerStats.GetCurrency(EnumCurrency.pinkBits);
+        currentSaveData.greenBits = playerStats.GetCurrency(EnumCurrency.greenBits);
+        
+        SaveGame(currentSaveData);
+        Debug.Log($"💰 All currencies saved: Y={currentSaveData.yellowBits}, B={currentSaveData.blueBits}, P={currentSaveData.pinkBits}, G={currentSaveData.greenBits}");
+    }
+
+    /// <summary>
+    /// 💰 Get currency by type
+    /// </summary>
+    public int GetCurrency(EnumCurrency currencyType)
+    {
+        if (currentSaveData == null)
+            currentSaveData = LoadGame();
+
+        switch (currencyType)
+        {
+            case EnumCurrency.yellowBits: return currentSaveData.yellowBits;
+            case EnumCurrency.blueBits: return currentSaveData.blueBits;
+            case EnumCurrency.pinkBits: return currentSaveData.pinkBits;
+            case EnumCurrency.greenBits: return currentSaveData.greenBits;
+            default: return 0;
+        }
+    }
+
+    /// <summary>
+    /// �🗑️ Delete save file (for testing)
     /// </summary>
     public void DeleteSave()
     {
@@ -232,6 +288,12 @@ public class SaveData
     
     // 👤 Player level
     public int playerLevel = 1;
+    
+    // 💰 Currencies
+    public int yellowBits = 0;
+    public int blueBits = 0;
+    public int pinkBits = 0;
+    public int greenBits = 0;
 }
 
 /// <summary>

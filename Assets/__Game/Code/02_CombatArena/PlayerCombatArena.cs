@@ -138,6 +138,10 @@ public class PlayerCombatArena : MonoBehaviour
             collectedCurrency[EnumCurrency.pinkBits] += 1;
         }
         
+        // 💰 Save all currencies when game ends
+        if (SaveSystem.Instance != null && playerStats != null)
+            SaveSystem.Instance.SaveAllCurrenciesFromPlayerStats(playerStats);
+        
         // 🎉 Show win UI
         if (playerUI != null)
             playerUI.ShowWin();
@@ -147,8 +151,12 @@ public class PlayerCombatArena : MonoBehaviour
 
     private void CheckCurrencyPickup()
     {
+        // 🧲 Calculate actual pickup radius with bonus from stats
+        int radiusIncreasePercent = playerStats.GetStatValue(EnumStat.currencyPickupRadiusIncreasePercent);
+        float actualPickupRadius = currencyPickupRadius * (1f + radiusIncreasePercent / 100f);
+        
         // 💰 Detect all currency within pickup radius
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, currencyPickupRadius, currencyLayer);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, actualPickupRadius, currencyLayer);
 
         foreach (var hit in hits)
         {
@@ -181,11 +189,28 @@ public class PlayerCombatArena : MonoBehaviour
         // 🎯 Smooth movement
         transform.position = Vector3.Lerp(transform.position, targetPos, moveSpeed * Time.deltaTime);
     }
+    
+    /// <summary>
+    /// ⚔️ Attack Routine - Continuously attacks based on attackSpeed stat
+    /// 
+    /// 📊 How attackSpeed works:
+    /// - attackSpeed = 1  → Attack every 1.0 second  (1/1 = 1.0s)
+    /// - attackSpeed = 2  → Attack every 0.5 second  (1/2 = 0.5s)
+    /// - attackSpeed = 4  → Attack every 0.25 second (1/4 = 0.25s)
+    /// - attackSpeed = 10 → Attack every 0.1 second  (1/10 = 0.1s)
+    /// 
+    /// 🔢 Formula: waitTime = 1 / attackSpeed
+    /// Higher attackSpeed = faster attacks!
+    /// </summary>
     private IEnumerator AttackRoutine()
     {
         while (true)
         {
+            // 🎮 Get attackSpeed from PlayerStats (minimum 0.01 to prevent division by zero)
             float attackSpeed = Mathf.Max(playerStats.GetStatValue(EnumStat.attackSpeed), 0.01f);
+            
+            // ⏱️ Wait time between attacks = 1 / attackSpeed
+            // Example: attackSpeed=2 means wait 0.5 seconds between attacks
             yield return new WaitForSeconds(1f / attackSpeed);
             
             if (!isDead)
@@ -326,7 +351,19 @@ public class PlayerCombatArena : MonoBehaviour
         // 🧮 Calculate average damage from single enemy
         int totalDamageTaken = damageTakenFromBoss + damageTakenFromEnemy;
         damageTakenFromSingleEnemy = enemyCount > 0 ? Mathf.RoundToInt((float)totalDamageTaken / enemyCount) : 0;
-
+        // 💚 Heal HP based on enemies hit: addHealthPerEnemyHit * enemyCount
+        int healPerHit = playerStats.GetStatValue(EnumStat.addHealthPerEnemyHit);
+        if (healPerHit > 0 && enemyCount > 0)
+        {
+            int totalHeal = healPerHit * enemyCount;
+            currentHp += totalHeal;
+            
+            // 📊 Cap HP at max HP
+            int baseHpValue = playerStats.GetStatValue(EnumStat.baseHp);
+            int hpValue = playerStats.GetStatValue(EnumStat.hp);
+            int maxHp = baseHpValue + hpValue;
+            currentHp = Mathf.Min(currentHp, maxHp);
+        }
         // 📊 Update debug info
         UpdateDebugField(enemyCount, damageDealtToSingleEnemy, totalDamageDealtToAllEnemies, damageTakenFromBoss, damageTakenFromEnemy, damageTakenFromSingleEnemy);
 
@@ -412,7 +449,11 @@ public class PlayerCombatArena : MonoBehaviour
     {
         isDead = true;
         
-        // 💀 Show lose UI
+        // � Save all currencies when game ends
+        if (SaveSystem.Instance != null && playerStats != null)
+            SaveSystem.Instance.SaveAllCurrenciesFromPlayerStats(playerStats);
+        
+        // �💀 Show lose UI
         if (playerUI != null)
             playerUI.ShowLose();
         
@@ -426,6 +467,23 @@ public class PlayerCombatArena : MonoBehaviour
     public int GetCurrentHp() => currentHp;
     public int GetCurrentExp() => currentExp;
     public Dictionary<EnumCurrency, int> GetCollectedCurrency() => collectedCurrency;
+
+    /// <summary>
+    /// 💚 Heal player by amount (capped at max HP)
+    /// Called when enemy dies to apply addHealthPerEnemyKill
+    /// </summary>
+    public void HealPlayer(int amount)
+    {
+        if (isDead || amount <= 0) return;
+        
+        currentHp += amount;
+        
+        // 📊 Cap HP at max HP
+        int baseHpValue = playerStats.GetStatValue(EnumStat.baseHp);
+        int hpValue = playerStats.GetStatValue(EnumStat.hp);
+        int maxHp = baseHpValue + hpValue;
+        currentHp = Mathf.Min(currentHp, maxHp);
+    }
 
     private IEnumerator FlashAlpha()
     {

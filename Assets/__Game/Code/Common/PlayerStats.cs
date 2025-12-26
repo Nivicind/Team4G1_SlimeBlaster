@@ -15,7 +15,7 @@ public class PlayerStats : MonoBehaviour
     public int hpLossPerSecond = 1; //ok
     public int damage = 10; //ok
     public int attackSizePercent = 100;//ok
-    public int attackSpeed = 1;
+    public int attackSpeed = 1;//ok
     public int exp = 0;
     public int level = 1;
     public int baseReflection = 0; //ok
@@ -30,6 +30,9 @@ public class PlayerStats : MonoBehaviour
     public int additionalYellowBitsDropPerEnemy = 0;  //ok
     public int additionalGreenBitsDropPerEnemy = 0;  //ok
     public int spawnRatePercent = 100; //ok
+    public int addHealthPerEnemyHit = 0; //ok
+    public int addHealthPerEnemyKill = 0;
+    public int currencyPickupRadiusIncreasePercent = 0;
 
     [Header("Currencies (Inspector)")]
     public int blueBits = 1000;
@@ -45,7 +48,21 @@ public class PlayerStats : MonoBehaviour
     private void Awake()
     {
         SetDefaultValues();
+        LoadCurrenciesFromSave();
     }
+    
+    private void LoadCurrenciesFromSave()
+    {
+        if (SaveSystem.Instance != null)
+        {
+            currencyDict[EnumCurrency.yellowBits] = SaveSystem.Instance.GetCurrency(EnumCurrency.yellowBits);
+            currencyDict[EnumCurrency.blueBits] = SaveSystem.Instance.GetCurrency(EnumCurrency.blueBits);
+            currencyDict[EnumCurrency.pinkBits] = SaveSystem.Instance.GetCurrency(EnumCurrency.pinkBits);
+            currencyDict[EnumCurrency.greenBits] = SaveSystem.Instance.GetCurrency(EnumCurrency.greenBits);
+            Debug.Log($"📥 Currencies loaded: Y={currencyDict[EnumCurrency.yellowBits]}, B={currencyDict[EnumCurrency.blueBits]}, P={currencyDict[EnumCurrency.pinkBits]}, G={currencyDict[EnumCurrency.greenBits]}");
+        }
+    }
+    
     private void Update()
     {
         UpdateValueToInspector();
@@ -77,6 +94,9 @@ public class PlayerStats : MonoBehaviour
         statsDict[EnumStat.additionalYellowBitsDropPerEnemy] = 0;
         statsDict[EnumStat.additionalGreenBitsDropPerEnemy] = 0;
         statsDict[EnumStat.spawnRatePercent] = 100;
+        statsDict[EnumStat.addHealthPerEnemyHit] = 0;
+        statsDict[EnumStat.addHealthPerEnemyKill] = 0;
+        statsDict[EnumStat.currencyPickupRadiusIncreasePercent] = 0;
 
         currencyDict[EnumCurrency.blueBits] = 1000;
         currencyDict[EnumCurrency.pinkBits] = 1000;
@@ -109,6 +129,9 @@ public class PlayerStats : MonoBehaviour
         additionalYellowBitsDropPerEnemy = statsDict[EnumStat.additionalYellowBitsDropPerEnemy];
         additionalGreenBitsDropPerEnemy = statsDict[EnumStat.additionalGreenBitsDropPerEnemy];
         spawnRatePercent = statsDict[EnumStat.spawnRatePercent];
+        addHealthPerEnemyHit = statsDict[EnumStat.addHealthPerEnemyHit];
+        addHealthPerEnemyKill = statsDict[EnumStat.addHealthPerEnemyKill];
+        currencyPickupRadiusIncreasePercent = statsDict[EnumStat.currencyPickupRadiusIncreasePercent];
 
         blueBits = currencyDict[EnumCurrency.blueBits];
         pinkBits = currencyDict[EnumCurrency.pinkBits];
