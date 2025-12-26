@@ -136,10 +136,72 @@ public class SaveSystem : Singleton<SaveSystem>
     {
         currentSaveData = new SaveData
         {
-            upgradeLevels = new List<UpgradeLevelData>()
+            upgradeLevels = new List<UpgradeLevelData>(),
+            currentStageSelected = 1,
+            maxUnlockedStage = 1,
+            playerLevel = 1
         };
         SaveGame(currentSaveData);
         return currentSaveData;
+    }
+
+    /// <summary>
+    /// 🎮 Save stage data
+    /// </summary>
+    public void SaveStageData(int currentStage, int maxUnlocked)
+    {
+        if (currentSaveData == null)
+        {
+            currentSaveData = LoadGame();
+        }
+
+        currentSaveData.currentStageSelected = currentStage;
+        currentSaveData.maxUnlockedStage = maxUnlocked;
+        SaveGame(currentSaveData);
+        Debug.Log($"💾 Stage data saved: Current={currentStage}, Max={maxUnlocked}");
+    }
+
+    /// <summary>
+    /// 📥 Load stage data
+    /// </summary>
+    public void LoadStageData(out int currentStage, out int maxUnlocked)
+    {
+        if (currentSaveData == null)
+        {
+            currentSaveData = LoadGame();
+        }
+
+        currentStage = currentSaveData.currentStageSelected;
+        maxUnlocked = currentSaveData.maxUnlockedStage;
+        Debug.Log($"📥 Stage data loaded: Current={currentStage}, Max={maxUnlocked}");
+    }
+
+    /// <summary>
+    /// 👤 Save player level
+    /// </summary>
+    public void SavePlayerLevel(int level)
+    {
+        if (currentSaveData == null)
+        {
+            currentSaveData = LoadGame();
+        }
+
+        currentSaveData.playerLevel = level;
+        SaveGame(currentSaveData);
+        Debug.Log($"💾 Player level saved: {level}");
+    }
+
+    /// <summary>
+    /// 📥 Get player level
+    /// </summary>
+    public int GetPlayerLevel()
+    {
+        if (currentSaveData == null)
+        {
+            currentSaveData = LoadGame();
+        }
+
+        return currentSaveData.playerLevel;
     }
 
     /// <summary>
@@ -163,6 +225,13 @@ public class SaveSystem : Singleton<SaveSystem>
 public class SaveData
 {
     public List<UpgradeLevelData> upgradeLevels = new List<UpgradeLevelData>();
+    
+    // 🎮 Level/Stage data
+    public int currentStageSelected = 1;
+    public int maxUnlockedStage = 1;
+    
+    // 👤 Player level
+    public int playerLevel = 1;
 }
 
 /// <summary>

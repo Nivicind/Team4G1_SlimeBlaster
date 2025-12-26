@@ -17,6 +17,12 @@ public class Level : Singleton<Level>
     {
         base.Awake();
         
+        // 📥 Load saved stage data
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.LoadStageData(out level, out unlockedLevel);
+        }
+        
         // Add listeners to buttons
         if (increaseButton != null)
         {
@@ -39,6 +45,13 @@ public class Level : Singleton<Level>
             level++;
             UpdateLevelText();
             UpdateButtonVisibility();
+            
+            // 💾 Save stage data
+            if (SaveSystem.Instance != null)
+            {
+                SaveSystem.Instance.SaveStageData(level, unlockedLevel);
+            }
+            
             Debug.Log($"Level increased to: {level}");
         }
         else
@@ -54,6 +67,13 @@ public class Level : Singleton<Level>
             level--;
             UpdateLevelText();
             UpdateButtonVisibility();
+            
+            // 💾 Save stage data
+            if (SaveSystem.Instance != null)
+            {
+                SaveSystem.Instance.SaveStageData(level, unlockedLevel);
+            }
+            
             Debug.Log($"Level decreased to: {level}");
         }
         else
@@ -96,6 +116,13 @@ public class Level : Singleton<Level>
         level += amount;
         UpdateLevelText();
         UpdateButtonVisibility();
+        
+        // 💾 Save stage data
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.SaveStageData(level, unlockedLevel);
+        }
+        
         Debug.Log($"Unlocked {amount} new levels. Current level: {level}, Max level: {unlockedLevel}");
     }
 }
