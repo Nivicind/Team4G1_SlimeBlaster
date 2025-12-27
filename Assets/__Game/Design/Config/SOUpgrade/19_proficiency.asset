@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: proficiency
   description: +[int] damage
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b181f9eff2b9e6b4391aadcda4617297, type: 3}
   stat: 2
   perUpgradeValue: 10
   maxLevel: 10

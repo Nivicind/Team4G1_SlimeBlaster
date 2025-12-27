@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: skilled salvager
   description: +[int]heath/ 1 enemy killed
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 934348d0d756c8e4b8db275cdbd9340c, type: 3}
   stat: 23
   perUpgradeValue: 50
   maxLevel: 1

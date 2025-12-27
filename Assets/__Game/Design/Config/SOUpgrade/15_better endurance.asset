@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: better endurance
   description: +[int] max health
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: dbd495e9d912bb5489a4f20ae224e4fa, type: 3}
   stat: 0
   perUpgradeValue: 12
   maxLevel: 8

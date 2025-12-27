@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: magnet
   description: +[int]% collect area radius
-  icon: {fileID: 0}
-  stat: 2
+  icon: {fileID: 21300000, guid: 3b5862bacb7103746869bdc1e74ea0b1, type: 3}
+  stat: 24
   perUpgradeValue: 50
   maxLevel: 5
   costFormula: 30+6*(n-1)

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: sapper
   description: +[int]heath/ 1 enemy hit
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 4d87a357f2675cf4fb7a926dc306a621, type: 3}
   stat: 22
   perUpgradeValue: 5
   maxLevel: 5

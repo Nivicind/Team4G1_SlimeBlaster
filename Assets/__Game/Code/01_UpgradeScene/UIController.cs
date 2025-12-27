@@ -138,7 +138,7 @@ public class UIController : MonoBehaviour
         {
             // Check if popup is currently down (visible)
             bool isPopupDown = Mathf.Abs(popupContentPanel.transform.localPosition.y - popupOriginalPosition.y) < 1f;
-            
+
             if (isPopupDown)
             {
                 // Check if we didn't click on an upgrade button
@@ -155,7 +155,7 @@ public class UIController : MonoBehaviour
         // Check if we hit any button or the popup content panel
         Canvas canvas = GetComponentInParent<Canvas>();
         Camera uiCamera = canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera ? canvas.worldCamera : null;
-        
+
         // First check if we clicked on the popup content panel itself
         if (popupContentPanel != null)
         {
@@ -165,7 +165,7 @@ public class UIController : MonoBehaviour
                 return true;
             }
         }
-        
+
         // Then check all buttons
         Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
         foreach (var btn in allButtons)
@@ -253,7 +253,7 @@ public class UIController : MonoBehaviour
                 int currentMoney = playerStats.GetCurrency(nodeInstance.data.costUnit);
                 moneyText.text = $"<sprite index=0> {currentMoney} / {cost}";
             }
-            
+
             // Reset money text color
             moneyText.DOKill();
             moneyText.color = originalMoneyTextColor;
@@ -302,7 +302,7 @@ public class UIController : MonoBehaviour
                 {
                     moneyText.DOKill();
                     moneyText.color = originalMoneyTextColor;
-                    
+
                     moneyText.DOColor(maxLevelFlashColor, flashDuration / 2)
                         .SetLoops(2, LoopType.Yoyo)
                         .OnComplete(() => moneyText.color = originalMoneyTextColor);
@@ -325,12 +325,12 @@ public class UIController : MonoBehaviour
                     moneyText.color = originalMoneyTextColor;
                     moneyText.transform.localPosition = Vector3.zero;
                     moneyText.transform.rotation = Quaternion.identity;
-                    
+
                     // Flash color
                     moneyText.DOColor(flashColor, flashDuration / (flashCount * 2))
                         .SetLoops(flashCount * 2, LoopType.Yoyo)
                         .OnComplete(() => moneyText.color = originalMoneyTextColor);
-                    
+
                     // Shake text
                     moneyText.transform.DOShakePosition(flashDuration, strength: shakeStrength, vibrato: shakeVibrato, randomness: shakeRandomness);
                 }
@@ -343,7 +343,7 @@ public class UIController : MonoBehaviour
                 confirmUpgradeButton.transform.DOKill();
                 confirmUpgradeButton.transform.rotation = Quaternion.identity;
                 confirmUpgradeButton.transform.localScale = Vector3.one;
-                
+
                 // Jiggle the confirm button
                 confirmUpgradeButton.transform.DOPunchRotation(new Vector3(0, 0, confirmJiggleRotation), confirmJiggleDuration, 10, 1f);
                 confirmUpgradeButton.transform.DOPunchScale(Vector3.one * confirmJiggleScale, confirmJiggleDuration, 5, 0.5f);
@@ -352,14 +352,14 @@ public class UIController : MonoBehaviour
             // Kill any existing tweens on upgrade button and reset
             currentUpgradeButton.transform.DOKill();
             currentUpgradeButton.transform.rotation = Quaternion.identity;
-            
+
             // Restore to selected scale, then jiggle
             currentUpgradeButton.transform.localScale = Vector3.one * selectedButtonScale;
             currentUpgradeButton.transform.DOPunchRotation(new Vector3(0, 0, confirmJiggleRotation), confirmJiggleDuration, 10, 1f);
             currentUpgradeButton.transform.DOPunchScale(Vector3.one * selectedButtonScale * confirmJiggleScale, confirmJiggleDuration, 5, 0.5f);
 
             currentUpgradeButton.PerformUpgrade();
-            
+
             // Update the popup info after upgrade
             if (currentNodeInstance != null)
             {

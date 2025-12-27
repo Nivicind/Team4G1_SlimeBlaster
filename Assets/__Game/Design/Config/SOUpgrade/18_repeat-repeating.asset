@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: repeat-repeating
   description: +[int]% attack speed
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: edff149ff2f7b734da4a4eeeac167907, type: 3}
   stat: 4
   perUpgradeValue: 30
   maxLevel: 1
