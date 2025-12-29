@@ -22,13 +22,12 @@ public class Boss : Enemy
     public void SetTarget(Vector3 target)
     {
         targetPosition = target;
+        bossDirection = ((Vector2)target - (Vector2)transform.position).normalized;
     }
 
     protected override void Update()
     {
-        // Only move if not at target position
-        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
-        if (direction != Vector2.zero) bossDirection = direction;
+        // Always move in the locked direction
         transform.position += (Vector3)(bossDirection * moveSpeed * Time.deltaTime);
         CheckOffscreen();
     }
