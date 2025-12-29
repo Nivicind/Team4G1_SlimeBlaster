@@ -724,6 +724,10 @@ MonoBehaviour:
   blinkMaxInterval: 5
   glowAmount: 4
   glowDuration: 0.2
+  deathScaleMultiplier: 1.25
+  deathScaleDuration: 0
+  deathFlashDuration: 0.1
+  deathEase: 27
 --- !u!210 &-6107826859941863869
 SortingGroup:
   m_ObjectHideFlags: 0

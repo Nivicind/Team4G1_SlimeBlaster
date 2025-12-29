@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class CurrencySprite
@@ -67,7 +68,15 @@ public class UIController : MonoBehaviour
     [Header("Max Level Flash")]
     public Color maxLevelFlashColor = Color.yellow;
 
+    [Header("🍿 Breach Buttons")]
+    public Button[] breachButtons;
+    public float breachJumpHeight = 30f;
+    public float breachJumpDuration = 0.15f;
+    public int breachJumpCount = 3;
+    public Ease breachJumpEase = Ease.OutQuad;
+
     private bool isPanelOpen = false;
+    private Dictionary<Button, bool> breachButtonAnimating = new Dictionary<Button, bool>();
     private bool isSettingPanelOpen = false;
     private Vector3 originalPosition;
     private Vector3 popupOriginalPosition;
@@ -128,6 +137,19 @@ public class UIController : MonoBehaviour
         if (moneyText != null)
         {
             originalMoneyTextColor = moneyText.color;
+        }
+
+        // 🍿 Setup breach buttons
+        if (breachButtons != null)
+        {
+            foreach (var btn in breachButtons)
+            {
+                if (btn != null)
+                {
+                    breachButtonAnimating[btn] = false;
+                    btn.onClick.AddListener(() => OnBreachButtonClicked(btn));
+                }
+            }
         }
     }
 
@@ -423,6 +445,39 @@ public class UIController : MonoBehaviour
         }
     }
 
+    // 🍿 Breach button popcorn animation
+    private void OnBreachButtonClicked(Button btn)
+    {
+        if (btn == null) return;
+        
+        // Check if this specific button is already animating
+        if (breachButtonAnimating.ContainsKey(btn) && breachButtonAnimating[btn]) return;
+
+        breachButtonAnimating[btn] = true;
+
+        // Kill any existing tweens and reset
+        btn.transform.DOKill();
+        Vector3 originalPos = btn.transform.localPosition;
+
+        // Create popcorn jumping sequence
+        Sequence popcornSequence = DOTween.Sequence();
+
+        for (int i = 0; i < breachJumpCount; i++)
+        {
+            // Jump up
+            popcornSequence.Append(btn.transform.DOLocalMoveY(originalPos.y + breachJumpHeight, breachJumpDuration).SetEase(breachJumpEase));
+            // Fall down
+            popcornSequence.Append(btn.transform.DOLocalMoveY(originalPos.y, breachJumpDuration).SetEase(Ease.InQuad));
+        }
+
+        // Reset position and allow pressing again when complete
+        popcornSequence.OnComplete(() =>
+        {
+            btn.transform.localPosition = originalPos;
+            breachButtonAnimating[btn] = false;
+        });
+    }
+
     private void OnDestroy()
     {
         if (resourceButton != null)
@@ -448,6 +503,17 @@ public class UIController : MonoBehaviour
         if (terminateButton != null)
         {
             terminateButton.onClick.RemoveListener(CloseSettingPanel);
+        }
+
+        if (breachButtons != null)
+        {
+            foreach (var btn in breachButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.RemoveAllListeners();
+                }
+            }
         }
     }
 }

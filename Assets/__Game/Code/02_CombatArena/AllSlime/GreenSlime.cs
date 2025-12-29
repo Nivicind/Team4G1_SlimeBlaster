@@ -4,13 +4,13 @@ public class GreenSlime : Enemy
 {
     [Header("Split Settings")]
     [SerializeField] private int smallSlimesToSpawn = 2;
-    
+
     private ObjectPool greenSlimeSmallPool;
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        
+
         // Find the pool by tag
         if (greenSlimeSmallPool == null)
         {
@@ -28,13 +28,16 @@ public class GreenSlime : Enemy
 
     protected override void Die()
     {
-        // Spawn small slimes before dying
-        SpawnSmallSlimes();
-        
-        // Continue with normal death behavior
-        GiveExpToPlayer();
-        SpawnCurrency();
-        ReturnToPool();
+        slimeAnim.PlayDeathAnimation(() =>
+        {
+            // Spawn small slimes before dying
+            SpawnSmallSlimes();
+            // Continue with normal death behavior
+            GiveExpToPlayer();
+            SpawnCurrency();
+            ReturnToPool();
+        });
+
     }
 
     private void SpawnSmallSlimes()
@@ -51,7 +54,7 @@ public class GreenSlime : Enemy
         for (int i = 0; i < smallSlimesToSpawn; i++)
         {
             Vector3 spawnPos;
-            
+
             if (col != null)
             {
                 // Spawn at random position inside collider bounds
@@ -67,9 +70,9 @@ public class GreenSlime : Enemy
                 // Fallback if no collider
                 spawnPos = transform.position + (Vector3)Random.insideUnitCircle * 0.5f;
             }
-            
+
             GameObject smallSlime = greenSlimeSmallPool.Get(spawnPos, Quaternion.identity);
-            
+
             if (smallSlime != null)
             {
                 GreenSlimeSmall smallSlimeScript = smallSlime.GetComponent<GreenSlimeSmall>();
@@ -81,7 +84,7 @@ public class GreenSlime : Enemy
                     smallSlimeScript.currencyReference = currencyReference;
                     smallSlimeScript.playerStats = playerStats;
                     smallSlimeScript.targetPosition = targetPosition;
-                    
+
                     // Add to spawner's active list
                     spawner?.AddEnemyToActiveList(smallSlimeScript);
                 }

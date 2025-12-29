@@ -15,8 +15,9 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public Vector2 targetPosition;
 
     public int currentHealth { get; private set; }
+    protected SlimeAnimation slimeAnim;
+    
     private Camera mainCamera;
-    private SlimeAnimation slimeAnim;
     private bool justSpawned = true;
     private float spawnIgnoreTime = 3f;
     private Vector2 direction;
@@ -117,10 +118,13 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Die()
     {
-        GiveExpToPlayer();
-        SpawnCurrency();
-        HealPlayerOnKill();
-        ReturnToPool();
+        slimeAnim.PlayDeathAnimation(() => {
+            // Delayed actions after animation completes
+            GiveExpToPlayer();
+            SpawnCurrency();
+            HealPlayerOnKill();
+            ReturnToPool();
+        });
     }
 
     /// <summary>

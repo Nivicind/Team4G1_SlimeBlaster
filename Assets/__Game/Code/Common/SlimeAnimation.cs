@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening; // Ensure DOTween is imported if using it
 
 public class SlimeAnimation : MonoBehaviour
 {
@@ -42,12 +43,18 @@ public class SlimeAnimation : MonoBehaviour
     private float frameTimer = 0f;
     private float blinkTimer = 0f;
     private float nextBlinkTime;
-    
+
     private enum AnimState { Idle, Blink, Hurt }
     private AnimState currentState = AnimState.Idle;
     private bool isHurtPlaying = false;
     private float stateTimer = 0f;
-    
+
+    [Header("Death Animation Settings")]
+    public float deathScaleMultiplier = 1.2f; // How much bigger it pops
+    public float deathScaleDuration = 0f; // Time to scale up
+    public float deathFlashDuration = 0.1f; // Time to flash white
+    public Ease deathEase = Ease.OutBack; // E
+
     // 🔥 Glow effect using MaterialPropertyBlock (per-object, not shared)
     private MaterialPropertyBlock glowPropertyBlock;
     private MaterialPropertyBlock mainPropertyBlock;
@@ -59,13 +66,13 @@ public class SlimeAnimation : MonoBehaviour
         nextBlinkTime = Random.Range(blinkMinInterval, blinkMaxInterval);
         InitializePropertyBlocks();
     }
-    
+
     void OnEnable()
     {
         // 🔥 Re-initialize property blocks when re-enabled (for pooled objects)
         InitializePropertyBlocks();
     }
-    
+
     // 🔥 Initialize MaterialPropertyBlocks for both renderers
     private void InitializePropertyBlocks()
     {
@@ -74,14 +81,14 @@ public class SlimeAnimation : MonoBehaviour
             glowPropertyBlock = new MaterialPropertyBlock();
             SetGlow(0f);
         }
-        
+
         if (mainSpriteRenderer != null && mainPropertyBlock == null)
         {
             mainPropertyBlock = new MaterialPropertyBlock();
             SetMainGlow(0f);
         }
     }
-    
+
     void OnDisable()
     {
         // 🔥 Reset glow when disabled (only if liquidSpriteRenderer exists)
@@ -94,7 +101,7 @@ public class SlimeAnimation : MonoBehaviour
             }
             SetGlow(0f);
         }
-        
+
         // 🔥 Reset main/border glow when disabled
         if (mainSpriteRenderer != null)
         {
@@ -133,14 +140,14 @@ public class SlimeAnimation : MonoBehaviour
     void UpdateSyncedAnimation(List<Sprite> spriteList, SpriteRenderer renderer)
     {
         if (spriteList == null || spriteList.Count == 0 || renderer == null) return;
-        
+
         // If only 1 sprite, just display it (no animation)
         if (spriteList.Count == 1)
         {
             renderer.sprite = spriteList[0];
             return;
         }
-        
+
         int frame = currentFrame % spriteList.Count;
         renderer.sprite = spriteList[frame];
     }
@@ -148,14 +155,14 @@ public class SlimeAnimation : MonoBehaviour
     void UpdateSyncedSpriteMask(List<Sprite> spriteList, SpriteMask mask)
     {
         if (spriteList == null || spriteList.Count == 0 || mask == null) return;
-        
+
         // If only 1 sprite, just display it (no animation)
         if (spriteList.Count == 1)
         {
             mask.sprite = spriteList[0];
             return;
         }
-        
+
         int frame = currentFrame % spriteList.Count;
         mask.sprite = spriteList[frame];
     }
@@ -236,7 +243,7 @@ public class SlimeAnimation : MonoBehaviour
             currentState = AnimState.Hurt;
             stateTimer = 0f;
             isHurtPlaying = true;
-            
+
             // 🔥 Trigger glow effect (if either renderer exists)
             if (liquidSpriteRenderer != null || mainSpriteRenderer != null)
             {
@@ -246,7 +253,7 @@ public class SlimeAnimation : MonoBehaviour
             }
         }
     }
-    
+
     // 🔥 Glow effect coroutine
     private IEnumerator GlowRoutine()
     {
@@ -257,26 +264,42 @@ public class SlimeAnimation : MonoBehaviour
         SetGlow(0f); // Turn off liquid glow
         glowCoroutine = null;
     }
-    
+
     // 🔥 Set glow using MaterialPropertyBlock (only affects THIS object)
     private void SetGlow(float amount)
     {
         if (liquidSpriteRenderer == null || glowPropertyBlock == null) return;
-        
+
         // Get existing property block first to preserve other properties
         liquidSpriteRenderer.GetPropertyBlock(glowPropertyBlock);
         glowPropertyBlock.SetFloat(GlowAmountID, amount);
         liquidSpriteRenderer.SetPropertyBlock(glowPropertyBlock);
     }
-    
+
     // 🔥 Set main/border glow using MaterialPropertyBlock (only affects THIS object)
     private void SetMainGlow(float amount)
     {
         if (mainSpriteRenderer == null || mainPropertyBlock == null) return;
-        
+
         // Get existing property block first to preserve other properties
         mainSpriteRenderer.GetPropertyBlock(mainPropertyBlock);
         mainPropertyBlock.SetFloat(GlowAmountID, amount);
         mainSpriteRenderer.SetPropertyBlock(mainPropertyBlock);
+    }
+
+    public void PlayDeathAnimation(System.Action onComplete = null)
+    {
+        // Stop any ongoing animations if needed
+        transform.DOKill();
+
+        // Sequence: Scale up, flash white, then deactivate
+        Sequence deathSeq = DOTween.Sequence();
+        deathSeq.Append(transform.DOScale(transform.localScale * deathScaleMultiplier, deathScaleDuration).SetEase(deathEase));
+        deathSeq.Join(DOTween.To(() => mainSpriteRenderer.color, x => mainSpriteRenderer.color = x, Color.white, deathFlashDuration).SetLoops(2, LoopType.Yoyo)); // Flash white twice
+        deathSeq.OnComplete(() =>
+        {
+            transform.localScale = Vector3.one;  // Reset scale
+            onComplete?.Invoke(); // Call the callback if provided
+        });
     }
 }

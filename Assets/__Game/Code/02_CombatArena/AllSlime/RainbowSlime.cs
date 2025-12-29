@@ -15,9 +15,13 @@ public class RainbowSlime : Enemy
 
     protected override void Die()
     {
-        GiveExpToPlayer();
-        SpawnRandomCurrency();
-        ReturnToPool();
+        slimeAnim.PlayDeathAnimation(() =>
+        {
+            GiveExpToPlayer();
+            SpawnRandomCurrency();
+            ReturnToPool();
+        });
+
     }
 
     private void SpawnRandomCurrency()
@@ -44,7 +48,7 @@ public class RainbowSlime : Enemy
         for (int i = 0; i < totalAmount; i++)
         {
             Vector3 spawnPos;
-            
+
             if (col != null)
             {
                 // Spawn random position inside collider bounds
