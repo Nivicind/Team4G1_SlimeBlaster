@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 21_Gacha
   m_EditorClassIdentifier: 
-  upgradeName: king slayer
+  upgradeName: Gacha
   description: +[int]% crit damage
   icon: {fileID: 21300000, guid: 33c9039134df0244a9f10f19c5b6aefd, type: 3}
   stat: 11
