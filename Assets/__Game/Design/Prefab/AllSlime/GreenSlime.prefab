@@ -722,7 +722,7 @@ MonoBehaviour:
   hurtDuration: 0.6
   blinkMinInterval: 3
   blinkMaxInterval: 5
-  glowAmount: 4
+  glowAmount: 3
   glowDuration: 0.2
   deathScaleMultiplier: 1.25
   deathScaleDuration: 0

@@ -63,6 +63,7 @@ public class SlimeAnimation : MonoBehaviour
 
     [Header("Hit / Death Particle Effects")]
     public List<ParticleSystem> hitParticles;
+    private int currentParticleIndex = 0; // Track which particle to play next
 
     void Start()
     {
@@ -309,15 +310,18 @@ public class SlimeAnimation : MonoBehaviour
 
     private void PlayParticles()
     {
-        if (hitParticles == null) return;
+        if (hitParticles == null || hitParticles.Count == 0) return;
 
-        foreach (var ps in hitParticles)
+        // Play current particle, then move to next for next call
+        var ps = hitParticles[currentParticleIndex];
+        if (ps != null)
         {
-            if (ps == null) continue;
-
             ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             ps.Play();
         }
+
+        // Move to next particle (loop back to 0 if at end)
+        currentParticleIndex = (currentParticleIndex + 1) % hitParticles.Count;
     }
 
 }
