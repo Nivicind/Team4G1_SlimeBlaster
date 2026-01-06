@@ -48,39 +48,39 @@ public class EnemySpawner : MonoBehaviour
     {
         currentLevelEnemies.Clear();
 
-        if (Level.Instance == null)
+        if (Stage.Instance == null)
         {
-            Debug.LogWarning("Level.Instance is null");
+            Debug.LogWarning("Stage.Instance is null");
             return;
         }
 
-        int currentLevel = Level.Instance.GetLevel();
-        Debug.Log($"Loading enemies for level {currentLevel}. Total configs: {levelConfigs?.Count ?? 0}");
+        int currentStage = Stage.Instance.GetStage();
+        Debug.Log($"Loading enemies for stage {currentStage}. Total configs: {levelConfigs?.Count ?? 0}");
 
-        // Find the config for current level
+        // Find the config for current stage
         if (levelConfigs != null)
         {
             foreach (var config in levelConfigs)
             {
-                Debug.Log($"Checking config for level {config.level}, enemies in config: {config.enemiesForThisLevel?.Count ?? 0}");
-                if (config.level == currentLevel)
+                Debug.Log($"Checking config for stage {config.level}, enemies in config: {config.enemiesForThisLevel?.Count ?? 0}");
+                if (config.level == currentStage)
                 {
                     if (config.enemiesForThisLevel != null && config.enemiesForThisLevel.Count > 0)
                     {
                         // Copy the list to avoid reference issues
                         currentLevelEnemies = new List<EnemySpawnEntry>(config.enemiesForThisLevel);
-                        Debug.Log($"✓ Loaded {currentLevelEnemies.Count} enemy types for level {currentLevel}");
+                        Debug.Log($"✓ Loaded {currentLevelEnemies.Count} enemy types for stage {currentStage}");
                     }
                     else
                     {
-                        Debug.LogWarning($"⚠ Level {currentLevel} config exists but enemiesForThisLevel list is empty or null!");
+                        Debug.LogWarning($"⚠ Stage {currentStage} config exists but enemiesForThisLevel list is empty or null!");
                     }
                     return;
                 }
             }
         }
 
-        Debug.LogWarning($"⚠ No spawn configuration found for level {currentLevel}");
+        Debug.LogWarning($"⚠ No spawn configuration found for stage {currentStage}");
     }
 
     private void Update()

@@ -338,6 +338,9 @@ public class UIController : MonoBehaviour
 
             if (!hasEnoughMoney)
             {
+                // 🔊 Play not enough money sound
+                GlobalSoundManager.PlaySound(SoundType.clickbutNotEnoughMoney);
+                
                 // Flash money text red and shake if not enough money
                 if (moneyText != null)
                 {
@@ -358,6 +361,9 @@ public class UIController : MonoBehaviour
                 }
                 return;
             }
+
+            // 🔊 Play upgrade success sound
+            GlobalSoundManager.PlaySound(SoundType.clickEnoughMoney);
 
             // Kill any existing tweens on these objects to prevent stacking
             if (confirmUpgradeButton != null)

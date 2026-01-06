@@ -26,14 +26,17 @@ using System.Collections.Generic;
 
 public enum SoundType// enum just array of number 0,1,2,... but with names
 {
-    [InspectorName("🏃 Run")]
-    pressButton,// 👈 "Run" sound, internally stored as 0
+    [InspectorName("⚡ Laser Attack")]
+    laserAttack,
 
-    [InspectorName("🏹 Click Button")]
-    clickButton, // 👈 "Click Button" sound, internally stored as 1
+    [InspectorName("❌ Click Not Enough Money")]
+    clickbutNotEnoughMoney,
 
-    [InspectorName("🎯 Arrow Hit")]
-    arrowHit
+    [InspectorName("✅ Click Enough Money")]
+    clickEnoughMoney,
+
+    [InspectorName("🔘 Button Click")]
+    buttonClick
 }
 
 

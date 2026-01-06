@@ -140,10 +140,10 @@ public class PlayerCombatArena : MonoBehaviour
         // 🚫 Move player out of scene
         transform.position = new Vector3(100f, 0f, 0f);
         
-        // 🔓 Unlock 1 new level when boss is defeated
-        if (Level.Instance != null)
+        // 🔓 Unlock 1 new stage when boss is defeated
+        if (Stage.Instance != null)
         {
-            Level.Instance.UnlockLevels(1);
+            Stage.Instance.UnlockStages(1);
         }
         
         // 💎 Give player 1 pink bit as reward
@@ -408,6 +408,9 @@ public class PlayerCombatArena : MonoBehaviour
         }
         // 📊 Update debug info
         UpdateDebugField(enemyCount, damageDealtToSingleEnemy, totalDamageDealtToAllEnemies, damageTakenFromBoss, damageTakenFromEnemy, damageTakenFromSingleEnemy);
+
+        // 🔊 Play laser attack sound
+        GlobalSoundManager.PlaySound(SoundType.laserAttack);
 
         playerEffect.PlayerAttackEffect();
     }

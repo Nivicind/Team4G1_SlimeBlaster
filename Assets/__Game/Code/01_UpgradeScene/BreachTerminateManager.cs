@@ -61,6 +61,9 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void OnBreachClicked()
     {
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
+        
         transition.PlayTransition(() =>
         {
             foreach (var scene in upgradeScenes)
@@ -80,6 +83,9 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void OnTerminateClicked()
     {
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
+        
         transition.PlayTransition(() =>
         {
             foreach (var scene in combatScenes)
@@ -99,6 +105,9 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void OnToHomeClicked()
     {
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
+        
         transition.PlayTransition(() =>
         {
             if (gameOverPanel != null)
@@ -121,6 +130,9 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void OnRestartClicked()
     {
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
+        
         transition.PlayTransition(() =>
         {
             if (gameOverPanel != null)

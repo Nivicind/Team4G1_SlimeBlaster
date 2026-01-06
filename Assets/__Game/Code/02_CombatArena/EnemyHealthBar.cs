@@ -22,7 +22,7 @@ public class EnemyHealthBar : MonoBehaviour
     {
         if (enemy != null && enemy.enemyData != null)
         {
-            maxHealth = enemy.enemyData.hp * Level.Instance.GetLevel();
+            maxHealth = enemy.enemyData.hp * Stage.Instance.GetStage();
         }
     }
 

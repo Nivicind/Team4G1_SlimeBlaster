@@ -39,8 +39,8 @@ public class RainbowSlime : Enemy
         if (selectedPool == null)
             return;
 
-        int level = Level.Instance.GetLevel();
-        int totalAmount = selectedDrop.baseAmount * level;
+        int stage = Stage.Instance.GetStage();
+        int totalAmount = selectedDrop.baseAmount * stage;
 
         // Get collider bounds
         Collider2D col = GetComponent<Collider2D>();
