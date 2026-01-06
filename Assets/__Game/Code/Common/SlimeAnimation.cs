@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening; // Ensure DOTween is imported if using it
+using DG.Tweening;
 
 public class SlimeAnimation : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class SlimeAnimation : MonoBehaviour
     public List<Sprite> spriteMask;
 
     [Header("Sprite Renderers")]
-    public SpriteRenderer mainSpriteRenderer; // Border - has glow effect
+    public SpriteRenderer mainSpriteRenderer; // Border / glow
     public SpriteRenderer liquidSpriteRenderer;
     public SpriteRenderer hollowedSpriteRenderer;
     public SpriteMask spriteMaskRenderer;
@@ -24,46 +24,52 @@ public class SlimeAnimation : MonoBehaviour
     public Transform feet;
 
     [Header("Animation Settings")]
-    [Range(0f, 5f)]
-    public float frameChangeDuration = 0.1f; // Time between frame changes
-    [Range(0f, 5f)]
-    public float blinkDuration = 0.3f; // How long blink animation plays
-    [Range(0f, 5f)]
-    public float hurtDuration = 0.3f; // How long hurt animation plays
-    [Range(0f, 5f)]
-    public float blinkMinInterval = 0.5f; // Min time before next blink
-    [Range(0f, 5f)]
-    public float blinkMaxInterval = 1f; // Max time before next blink
+    [Range(0f, 5f)] public float frameChangeDuration = 0.1f;
+    [Range(0f, 5f)] public float blinkDuration = 0.3f;
+    [Range(0f, 5f)] public float hurtDuration = 0.3f;
+    [Range(0f, 5f)] public float blinkMinInterval = 0.5f;
+    [Range(0f, 5f)] public float blinkMaxInterval = 1f;
 
     [Header("Glow Settings")]
-    [SerializeField] private float glowAmount = 4f; // Glow intensity when hurt
-    [SerializeField] private float glowDuration = 0.2f; // How long glow lasts
+    [SerializeField] private float glowAmount = 4f;
+    [SerializeField] private float glowDuration = 0.2f;
 
-    private int currentFrame = 0;
-    private float frameTimer = 0f;
-    private float blinkTimer = 0f;
+    private int currentFrame;
+    private float frameTimer;
+    private float blinkTimer;
     private float nextBlinkTime;
+    private float stateTimer;
 
     private enum AnimState { Idle, Blink, Hurt }
     private AnimState currentState = AnimState.Idle;
-    private bool isHurtPlaying = false;
-    private float stateTimer = 0f;
+    private bool isHurtPlaying;
 
     [Header("Death Animation Settings")]
-    public float deathScaleMultiplier = 1.2f; // How much bigger it pops
-    public float deathScaleDuration = 0f; // Time to scale up
-    public float deathFlashDuration = 0.1f; // Time to flash white
-    public Ease deathEase = Ease.OutBack; // E
+    public float deathScaleMultiplier = 1.2f;
+    public float deathScaleDuration = 0f;
+    public float deathFlashDuration = 0.1f;
+    public Ease deathEase = Ease.OutBack;
 
-    // 🔥 Glow effect using MaterialPropertyBlock (per-object, not shared)
-    private MaterialPropertyBlock glowPropertyBlock;
-    private MaterialPropertyBlock mainPropertyBlock;
+    // 🔥 Glow (per-instance)
+    private MaterialPropertyBlock liquidBlock;
+    private MaterialPropertyBlock mainBlock;
     private Coroutine glowCoroutine;
     private static readonly int GlowAmountID = Shader.PropertyToID("_GlowAmount");
 
-    [Header("Hit / Death Particle Effects")]
-    public List<ParticleSystem> hitParticles;
-    private int currentParticleIndex = 0; // Track which particle to play next
+    // ================= PARTICLE GROUP SYSTEM =================
+
+    [Header("Hit / Death Particle Effect Groups")]
+    public List<ParticleGroup> particleGroups;
+
+    private int currentParticleGroupIndex = 0;
+
+    [System.Serializable]
+    public class ParticleGroup
+    {
+        public List<ParticleSystem> particles;
+    }
+
+    // =========================================================
 
     void Start()
     {
@@ -73,49 +79,19 @@ public class SlimeAnimation : MonoBehaviour
 
     void OnEnable()
     {
-        // 🔥 Re-initialize property blocks when re-enabled (for pooled objects)
         InitializePropertyBlocks();
-    }
-
-    // 🔥 Initialize MaterialPropertyBlocks for both renderers
-    private void InitializePropertyBlocks()
-    {
-        if (liquidSpriteRenderer != null && glowPropertyBlock == null)
-        {
-            glowPropertyBlock = new MaterialPropertyBlock();
-            SetGlow(0f);
-        }
-
-        if (mainSpriteRenderer != null && mainPropertyBlock == null)
-        {
-            mainPropertyBlock = new MaterialPropertyBlock();
-            SetMainGlow(0f);
-        }
+        currentParticleGroupIndex = 0; // pool-safe reset
     }
 
     void OnDisable()
     {
-        // 🔥 Reset glow when disabled (only if liquidSpriteRenderer exists)
-        if (liquidSpriteRenderer != null)
-        {
-            if (glowCoroutine != null)
-            {
-                StopCoroutine(glowCoroutine);
-                glowCoroutine = null;
-            }
-            SetGlow(0f);
-        }
-
-        // 🔥 Reset main/border glow when disabled
-        if (mainSpriteRenderer != null)
-        {
-            SetMainGlow(0f);
-        }
+        StopAllCoroutines();
+        SetGlow(0f);
+        SetMainGlow(0f);
     }
 
     void Update()
     {
-        // Advance global frame counter
         frameTimer += Time.deltaTime;
         if (frameTimer >= frameChangeDuration)
         {
@@ -123,59 +99,36 @@ public class SlimeAnimation : MonoBehaviour
             currentFrame++;
         }
 
-        // Update sorting order based on feet position
         UpdateSortingOrder();
 
-        // Update all animations with synchronized frame
         UpdateSyncedAnimation(hollowed, hollowedSpriteRenderer);
         UpdateSyncedAnimation(inside, liquidSpriteRenderer);
         UpdateSyncedSpriteMask(spriteMask, spriteMaskRenderer);
         UpdateMainAnimation();
     }
 
+    // ================= ANIMATION =================
+
     void UpdateSortingOrder()
     {
         if (sortingGroup == null || feet == null) return;
-
-        // Lower Y position = higher sorting order (appears in front)
         sortingGroup.sortingOrder = Mathf.RoundToInt(-feet.position.y * 100);
     }
 
-    void UpdateSyncedAnimation(List<Sprite> spriteList, SpriteRenderer renderer)
+    void UpdateSyncedAnimation(List<Sprite> list, SpriteRenderer renderer)
     {
-        if (spriteList == null || spriteList.Count == 0 || renderer == null) return;
-
-        // If only 1 sprite, just display it (no animation)
-        if (spriteList.Count == 1)
-        {
-            renderer.sprite = spriteList[0];
-            return;
-        }
-
-        int frame = currentFrame % spriteList.Count;
-        renderer.sprite = spriteList[frame];
+        if (list == null || list.Count == 0 || renderer == null) return;
+        renderer.sprite = list.Count == 1 ? list[0] : list[currentFrame % list.Count];
     }
 
-    void UpdateSyncedSpriteMask(List<Sprite> spriteList, SpriteMask mask)
+    void UpdateSyncedSpriteMask(List<Sprite> list, SpriteMask mask)
     {
-        if (spriteList == null || spriteList.Count == 0 || mask == null) return;
-
-        // If only 1 sprite, just display it (no animation)
-        if (spriteList.Count == 1)
-        {
-            mask.sprite = spriteList[0];
-            return;
-        }
-
-        int frame = currentFrame % spriteList.Count;
-        mask.sprite = spriteList[frame];
+        if (list == null || list.Count == 0 || mask == null) return;
+        mask.sprite = list.Count == 1 ? list[0] : list[currentFrame % list.Count];
     }
 
     void UpdateMainAnimation()
     {
-        if (mainSpriteRenderer == null) return;
-
-        // Handle blink trigger (only if not hurt)
         if (!isHurtPlaying)
         {
             blinkTimer += Time.deltaTime;
@@ -188,13 +141,12 @@ public class SlimeAnimation : MonoBehaviour
             }
         }
 
-        // Update current animation state
         stateTimer += Time.deltaTime;
 
         switch (currentState)
         {
             case AnimState.Idle:
-                PlayAnimation(idle, frameChangeDuration);
+                PlayAnimation(idle);
                 break;
 
             case AnimState.Blink:
@@ -203,10 +155,7 @@ public class SlimeAnimation : MonoBehaviour
                     currentState = AnimState.Idle;
                     stateTimer = 0f;
                 }
-                else
-                {
-                    PlayAnimation(blink, frameChangeDuration);
-                }
+                else PlayAnimation(blink);
                 break;
 
             case AnimState.Hurt:
@@ -216,112 +165,119 @@ public class SlimeAnimation : MonoBehaviour
                     stateTimer = 0f;
                     isHurtPlaying = false;
                 }
-                else
-                {
-                    PlayAnimation(hurt, frameChangeDuration);
-                }
+                else PlayAnimation(hurt);
                 break;
         }
     }
 
-    void PlayAnimation(List<Sprite> spriteList, float frameTime)
+    void PlayAnimation(List<Sprite> list)
     {
-        if (spriteList == null || spriteList.Count == 0) return;
-
-        // If only 1 sprite, just display it (no animation)
-        if (spriteList.Count == 1)
-        {
-            mainSpriteRenderer.sprite = spriteList[0];
-            return;
-        }
-
-        // Use synchronized frame - all animations stay in sync
-        int frame = currentFrame % spriteList.Count;
-        mainSpriteRenderer.sprite = spriteList[frame];
+        if (list == null || list.Count == 0 || mainSpriteRenderer == null) return;
+        mainSpriteRenderer.sprite = list.Count == 1 ? list[0] : list[currentFrame % list.Count];
     }
+
+    // ================= HIT / DEATH =================
 
     public void Hurt()
     {
-        if (!isHurtPlaying)
-        {
-            currentState = AnimState.Hurt;
-            stateTimer = 0f;
-            isHurtPlaying = true;
-            PlayParticles();
-            // 🔥 Trigger glow effect (if either renderer exists)
-            if (liquidSpriteRenderer != null || mainSpriteRenderer != null)
-            {
-                if (glowCoroutine != null)
-                    StopCoroutine(glowCoroutine);
-                glowCoroutine = StartCoroutine(GlowRoutine());
-            }
-        }
-    }
+        if (isHurtPlaying) return;
 
-    // 🔥 Glow effect coroutine
-    private IEnumerator GlowRoutine()
-    {
-        SetMainGlow(glowAmount); // Turn on main/border glow
-        SetGlow(glowAmount); // Turn on liquid glow
-        yield return new WaitForSeconds(glowDuration); // Wait 0.2s
-        SetMainGlow(0f); // Turn off main/border glow
-        SetGlow(0f); // Turn off liquid glow
-        glowCoroutine = null;
-    }
+        isHurtPlaying = true;
+        currentState = AnimState.Hurt;
+        stateTimer = 0f;
 
-    // 🔥 Set glow using MaterialPropertyBlock (only affects THIS object)
-    private void SetGlow(float amount)
-    {
-        if (liquidSpriteRenderer == null || glowPropertyBlock == null) return;
-
-        // Get existing property block first to preserve other properties
-        liquidSpriteRenderer.GetPropertyBlock(glowPropertyBlock);
-        glowPropertyBlock.SetFloat(GlowAmountID, amount);
-        liquidSpriteRenderer.SetPropertyBlock(glowPropertyBlock);
-    }
-
-    // 🔥 Set main/border glow using MaterialPropertyBlock (only affects THIS object)
-    private void SetMainGlow(float amount)
-    {
-        if (mainSpriteRenderer == null || mainPropertyBlock == null) return;
-
-        // Get existing property block first to preserve other properties
-        mainSpriteRenderer.GetPropertyBlock(mainPropertyBlock);
-        mainPropertyBlock.SetFloat(GlowAmountID, amount);
-        mainSpriteRenderer.SetPropertyBlock(mainPropertyBlock);
+        PlayParticleGroup();
+        TriggerGlow();
     }
 
     public void PlayDeathAnimation(System.Action onComplete = null)
     {
-        // Stop any ongoing animations if needed
         transform.DOKill();
 
-        // Sequence: Scale up, flash white, then deactivate
-        PlayParticles();
-        Sequence deathSeq = DOTween.Sequence();
-        deathSeq.Append(transform.DOScale(transform.localScale * deathScaleMultiplier, deathScaleDuration).SetEase(deathEase));
-        deathSeq.Join(DOTween.To(() => mainSpriteRenderer.color, x => mainSpriteRenderer.color = x, Color.white, deathFlashDuration).SetLoops(2, LoopType.Yoyo)); // Flash white twice
-        deathSeq.OnComplete(() =>
+        PlayParticleGroup();
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(transform.DOScale(transform.localScale * deathScaleMultiplier, deathScaleDuration).SetEase(deathEase));
+        seq.Join(DOTween.To(() => mainSpriteRenderer.color, c => mainSpriteRenderer.color = c,
+            Color.white, deathFlashDuration).SetLoops(2, LoopType.Yoyo));
+
+        seq.OnComplete(() =>
         {
-            transform.localScale = Vector3.one;  // Reset scale
-            onComplete?.Invoke(); // Call the callback if provided
+            transform.localScale = Vector3.one;
+            onComplete?.Invoke();
         });
     }
 
-    private void PlayParticles()
-    {
-        if (hitParticles == null || hitParticles.Count == 0) return;
+    // ================= PARTICLES =================
 
-        // Play current particle, then move to next for next call
-        var ps = hitParticles[currentParticleIndex];
-        if (ps != null)
+    private void PlayParticleGroup()
+    {
+        if (particleGroups == null || particleGroups.Count == 0)
+            return;
+
+        if (currentParticleGroupIndex >= particleGroups.Count)
+            currentParticleGroupIndex = 0; // loop
+
+        ParticleGroup group = particleGroups[currentParticleGroupIndex];
+
+        if (group?.particles != null)
         {
-            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            ps.Play();
+            foreach (var ps in group.particles)
+            {
+                if (ps == null) continue;
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                ps.Play();
+            }
         }
 
-        // Move to next particle (loop back to 0 if at end)
-        currentParticleIndex = (currentParticleIndex + 1) % hitParticles.Count;
+        currentParticleGroupIndex++;
     }
 
+    // ================= GLOW =================
+
+    private void InitializePropertyBlocks()
+    {
+        if (liquidSpriteRenderer != null && liquidBlock == null)
+            liquidBlock = new MaterialPropertyBlock();
+
+        if (mainSpriteRenderer != null && mainBlock == null)
+            mainBlock = new MaterialPropertyBlock();
+
+        SetGlow(0f);
+        SetMainGlow(0f);
+    }
+
+    private void TriggerGlow()
+    {
+        if (glowCoroutine != null)
+            StopCoroutine(glowCoroutine);
+
+        glowCoroutine = StartCoroutine(GlowRoutine());
+    }
+
+    private IEnumerator GlowRoutine()
+    {
+        SetGlow(glowAmount);
+        SetMainGlow(glowAmount);
+        yield return new WaitForSeconds(glowDuration);
+        SetGlow(0f);
+        SetMainGlow(0f);
+        glowCoroutine = null;
+    }
+
+    private void SetGlow(float amount)
+    {
+        if (liquidSpriteRenderer == null || liquidBlock == null) return;
+        liquidSpriteRenderer.GetPropertyBlock(liquidBlock);
+        liquidBlock.SetFloat(GlowAmountID, amount);
+        liquidSpriteRenderer.SetPropertyBlock(liquidBlock);
+    }
+
+    private void SetMainGlow(float amount)
+    {
+        if (mainSpriteRenderer == null || mainBlock == null) return;
+        mainSpriteRenderer.GetPropertyBlock(mainBlock);
+        mainBlock.SetFloat(GlowAmountID, amount);
+        mainSpriteRenderer.SetPropertyBlock(mainBlock);
+    }
 }
