@@ -19,21 +19,22 @@ public class BreachTerminateManager : MonoBehaviour
     public List<GameObject> combatScenes;
     public GameObject gameOverPanel;
 
+    [Header("Audio")]
+    public BackgroundMusic backgroundMusic;
+
     private void Awake()
     {
         transition = GetComponent<Transition>();
-        // Add listeners for buttons
+
         breachButton.onClick.AddListener(OnBreachClicked);
         terminateButton.onClick.AddListener(OnTerminateClicked);
-        
-        // Add listeners for all toHome buttons
+
         foreach (var button in toHomeButtons)
         {
             if (button != null)
                 button.onClick.AddListener(OnToHomeClicked);
         }
-        
-        // Add listeners for all restart buttons
+
         foreach (var button in restartButtons)
         {
             if (button != null)
@@ -43,84 +44,88 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void Start()
     {
-        // ✅ Show Breach/Upgrade first
+        // Start in Upgrade state
         foreach (var scene in upgradeScenes)
             if (scene != null) scene.SetActive(true);
-        
+
         foreach (var scene in combatScenes)
             if (scene != null) scene.SetActive(false);
 
-        // ✅ Show Breach button, hide Terminate button
-        if (breachButton != null) breachButton.gameObject.SetActive(true);
-        if (terminateButton != null) terminateButton.gameObject.SetActive(false);
+        breachButton.gameObject.SetActive(true);
+        terminateButton.gameObject.SetActive(false);
+
+        // 🎵 Upgrade music
+        if (backgroundMusic != null)
+            backgroundMusic.TransitionToUpgradeMusic();
     }
 
     private void OnBreachClicked()
     {
-        // 🎬 Play transition, then switch to Combat Scene
         transition.PlayTransition(() =>
         {
-            // ✅ Switch to Combat Scene
             foreach (var scene in upgradeScenes)
                 if (scene != null) scene.SetActive(false);
-            
+
             foreach (var scene in combatScenes)
                 if (scene != null) scene.SetActive(true);
 
-            // ✅ Hide Breach button, show Terminate button
-            if (breachButton != null) breachButton.gameObject.SetActive(false);
-            if (terminateButton != null) terminateButton.gameObject.SetActive(true);
+            breachButton.gameObject.SetActive(false);
+            terminateButton.gameObject.SetActive(true);
+
+            // 🎵 Combat music
+            if (backgroundMusic != null)
+                backgroundMusic.TransitionToCombatMusic();
         });
     }
 
     private void OnTerminateClicked()
     {
-        // 🎬 Play transition, then switch back to Upgrade Scene
         transition.PlayTransition(() =>
         {
-            // ✅ Switch back to Upgrade Scene
             foreach (var scene in combatScenes)
                 if (scene != null) scene.SetActive(false);
-            
+
             foreach (var scene in upgradeScenes)
                 if (scene != null) scene.SetActive(true);
 
-            // ✅ Hide Terminate button, show Breach button
-            if (terminateButton != null) terminateButton.gameObject.SetActive(false);
-            if (breachButton != null) breachButton.gameObject.SetActive(true);
+            terminateButton.gameObject.SetActive(false);
+            breachButton.gameObject.SetActive(true);
+
+            // 🎵 Back to upgrade music
+            if (backgroundMusic != null)
+                backgroundMusic.TransitionToUpgradeMusic();
         });
     }
 
     private void OnToHomeClicked()
     {
-        // 🎬 Play transition, then go to home
         transition.PlayTransition(() =>
         {
-            // Hide GameOver Panel
-            if (gameOverPanel != null) gameOverPanel.SetActive(false);
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(false);
 
-            // Switch back to Upgrade Scene (same as Terminate)
             foreach (var scene in combatScenes)
                 if (scene != null) scene.SetActive(false);
-            
+
             foreach (var scene in upgradeScenes)
                 if (scene != null) scene.SetActive(true);
 
-            // Hide Terminate button, show Breach button
-            if (terminateButton != null) terminateButton.gameObject.SetActive(false);
-            if (breachButton != null) breachButton.gameObject.SetActive(true);
+            terminateButton.gameObject.SetActive(false);
+            breachButton.gameObject.SetActive(true);
+
+            // 🎵 Upgrade music
+            if (backgroundMusic != null)
+                backgroundMusic.TransitionToUpgradeMusic();
         });
     }
 
     private void OnRestartClicked()
     {
-        // 🎬 Play transition, then restart
         transition.PlayTransition(() =>
         {
-            // Hide GameOver Panel
-            if (gameOverPanel != null) gameOverPanel.SetActive(false);
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(false);
 
-            // Restart Combat Scene (disable then enable to trigger OnEnable)
             foreach (var scene in combatScenes)
             {
                 if (scene != null)
@@ -129,6 +134,10 @@ public class BreachTerminateManager : MonoBehaviour
                     scene.SetActive(true);
                 }
             }
+
+            // 🎵 Combat music again
+            if (backgroundMusic != null)
+                backgroundMusic.TransitionToCombatMusic();
         });
     }
 }
