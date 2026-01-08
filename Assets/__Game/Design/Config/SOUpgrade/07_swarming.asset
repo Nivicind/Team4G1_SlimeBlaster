@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 07_swarming
   m_EditorClassIdentifier: 
-  upgradeName: swarming
+  upgradeName: Swarm Signal
   description: '''+[int]% spawn rate'
   icon: {fileID: 21300000, guid: eb11261491eeefa479edb72eadb7ccb2, type: 3}
   stat: 18
@@ -21,5 +21,5 @@ MonoBehaviour:
   costFormula: 100+(n*10)
   costUnit: 2
   unlockRequirementLevel: 1
-  description1: 
+  description1: Drastically increases the enemy spawn rate
   description2: 

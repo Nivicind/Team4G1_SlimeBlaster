@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 12_salvaging
   m_EditorClassIdentifier: 
-  upgradeName: salvaging
+  upgradeName: Scavenger
   description: +[int]heath/ 1 enemy killed
   icon: {fileID: 21300000, guid: cc0d4b9a221ad604a94027bce147e58b, type: 3}
   stat: 23
@@ -21,5 +21,5 @@ MonoBehaviour:
   costFormula: 8+2*(n-1)
   costUnit: 0
   unlockRequirementLevel: 10
-  description1: 
+  description1: Restores health upon killing an enemy
   description2: 
