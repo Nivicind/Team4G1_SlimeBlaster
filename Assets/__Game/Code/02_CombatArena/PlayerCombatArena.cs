@@ -527,8 +527,13 @@ public class PlayerCombatArena : MonoBehaviour
     private void Die()
     {
         isDead = true;
-        
-        // � Save all currencies when game ends
+                // 🏆 Check if boss is also defeated - if so, player wins!
+        if (bossEnemy != null && bossEnemy.isDefeated)
+        {
+            ShowWin();
+            return;
+        }
+                // � Save all currencies when game ends
         if (SaveSystem.Instance != null && playerStats != null)
             SaveSystem.Instance.SaveAllCurrenciesFromPlayerStats(playerStats);
         

@@ -20,5 +20,6 @@ MonoBehaviour:
   maxLevel: 5
   costFormula: 15+1*(n-1)
   costUnit: 2
+  unlockRequirementLevel: 10
   description1: 
   description2: 
