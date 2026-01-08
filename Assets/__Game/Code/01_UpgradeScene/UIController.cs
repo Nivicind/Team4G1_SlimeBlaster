@@ -465,6 +465,9 @@ public class UIController : MonoBehaviour
     {
         if (settingPanel != null)
         {
+            // 🔊 Play button click sound
+            GlobalSoundManager.PlaySound(SoundType.buttonClick);
+            
             settingPanel.SetActive(true);
             settingPanel.transform.localScale = Vector3.zero;
             settingPanel.transform.DOScale(settingPanelOriginalScale, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
@@ -478,6 +481,12 @@ public class UIController : MonoBehaviour
     {
         if (settingPanel != null)
         {
+            // 🔊 Play button click sound
+            GlobalSoundManager.PlaySound(SoundType.buttonClick);
+            
+            // 💾 Save volume settings
+            UIControllerAudio.SaveVolumeSettings();
+            
             settingPanel.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() =>
             {
                 settingPanel.SetActive(false);
@@ -494,6 +503,9 @@ public class UIController : MonoBehaviour
         
         // Check if this specific button is already animating
         if (breachButtonAnimating.ContainsKey(btn) && breachButtonAnimating[btn]) return;
+
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
 
         breachButtonAnimating[btn] = true;
 

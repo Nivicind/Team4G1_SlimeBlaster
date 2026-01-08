@@ -16,9 +16,10 @@ MonoBehaviour:
   description: '''+[int] max health'
   icon: {fileID: 21300000, guid: 53c62aba6902562408c878b35b20c7c3, type: 3}
   stat: 0
-  perUpgradeValue: 15
+  perUpgradeValue: 20
   maxLevel: 10
   costFormula: 2+1*(n-1)
   costUnit: 0
+  unlockRequirementLevel: 1
   description1: 
   description2: 
