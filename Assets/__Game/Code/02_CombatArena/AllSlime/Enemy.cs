@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
 
     [Header("Movement")]
     public float moveSpeed = 2f;
+
+     private float spawnIgnoreTime = 8f;
     
     [HideInInspector] public ObjectPool pool;
     [HideInInspector] public EnemySpawner spawner;
@@ -20,7 +22,6 @@ public class Enemy : MonoBehaviour
     
     private Camera mainCamera;
     private bool justSpawned = true;
-    private float spawnIgnoreTime = 3f;
     private Vector2 direction;
     private bool directionSet = false;
     private PlayerCombatArena playerCombatArena; // 🎮 Cached reference for healing on kill

@@ -7,6 +7,7 @@ public class Stage : Singleton<Stage>
     [Header("Stage Data")]
     [SerializeField] private int stage = 1;
     [SerializeField] private int unlockedStage = 1; // Maximum stage that can be accessed
+    [SerializeField] private int maxStage = 99; // 🏆 Absolute maximum stage limit
 
     [Header("UI References")]
     public Button increaseButton;
@@ -119,7 +120,9 @@ public class Stage : Singleton<Stage>
     public void UnlockStages(int amount)
     {
         unlockedStage += amount;
+        unlockedStage = Mathf.Min(unlockedStage, maxStage); // 🏆 Clamp to max stage
         stage += amount;
+        stage = Mathf.Min(stage, maxStage); // 🏆 Clamp to max stage
         UpdateStageText();
         UpdateButtonVisibility();
         
@@ -129,6 +132,30 @@ public class Stage : Singleton<Stage>
             SaveSystem.Instance.SaveStageData(stage, unlockedStage);
         }
         
-        Debug.Log($"Unlocked {amount} new stages. Current stage: {stage}, Max stage: {unlockedStage}");
+        Debug.Log($"Unlocked {amount} new stages. Current stage: {stage}, Unlocked: {unlockedStage}, Max: {maxStage}");
+    }
+    
+    /// <summary>
+    /// 🏆 Get the absolute maximum stage limit
+    /// </summary>
+    public int GetMaxStage()
+    {
+        return maxStage;
+    }
+    
+    /// <summary>
+    /// 🔓 Get the highest unlocked stage
+    /// </summary>
+    public int GetUnlockedStage()
+    {
+        return unlockedStage;
+    }
+    
+    /// <summary>
+    /// 🏆 Check if player has reached the max stage
+    /// </summary>
+    public bool IsAtMaxStage()
+    {
+        return unlockedStage >= maxStage;
     }
 }

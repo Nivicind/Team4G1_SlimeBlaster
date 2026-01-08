@@ -383,7 +383,7 @@ public class UIController : MonoBehaviour
                     moneyText.DOKill();
                     moneyText.transform.DOKill();
                     moneyText.color = originalMoneyTextColor;
-                    moneyText.transform.localPosition = Vector3.zero;
+                    moneyText.transform.localPosition = originalMoneyTextPosition;
                     moneyText.transform.rotation = Quaternion.identity;
 
                     // Flash color
