@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 13_skilled salvager
   m_EditorClassIdentifier: 
-  upgradeName: skilled salvager
+  upgradeName: Soul Eater
   description: +[int]heath/ 1 enemy killed
   icon: {fileID: 21300000, guid: 934348d0d756c8e4b8db275cdbd9340c, type: 3}
   stat: 23
@@ -21,5 +21,5 @@ MonoBehaviour:
   costFormula: 2
   costUnit: 2
   unlockRequirementLevel: 5
-  description1: 
+  description1: Restores a large amount of health upon killing an enemy
   description2: 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 16_magnet
   m_EditorClassIdentifier: 
-  upgradeName: magnet
+  upgradeName: Data Magnet
   description: +[int]% collect area radius
   icon: {fileID: 21300000, guid: 3b5862bacb7103746869bdc1e74ea0b1, type: 3}
   stat: 24
@@ -20,5 +20,6 @@ MonoBehaviour:
   maxLevel: 5
   costFormula: 30+6*(n-1)
   costUnit: 0
-  description1: 
+  unlockRequirementLevel: 1
+  description1: Increases the collection range for items and bits
   description2: 

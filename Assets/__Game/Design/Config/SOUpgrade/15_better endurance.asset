@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 15_better endurance
   m_EditorClassIdentifier: 
-  upgradeName: better endurance
+  upgradeName: Titan Core
   description: +[int] max health
   icon: {fileID: 21300000, guid: dbd495e9d912bb5489a4f20ae224e4fa, type: 3}
   stat: 0
@@ -21,5 +21,5 @@ MonoBehaviour:
   costFormula: 6+3*(n-1)
   costUnit: 3
   unlockRequirementLevel: 5
-  description1: 
+  description1: Greatly expands maximum health
   description2: 

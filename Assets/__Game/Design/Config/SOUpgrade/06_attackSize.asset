@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63aeb7295f7fe44db6e18355dd68c2c, type: 3}
   m_Name: 06_attackSize
   m_EditorClassIdentifier: 
-  upgradeName: attack size
+  upgradeName: Blast Radius
   description: +[int]% attack size
   icon: {fileID: 21300000, guid: 4629a3fb260f83740a66f3ff8f16cac2, type: 3}
   stat: 3
@@ -21,5 +21,5 @@ MonoBehaviour:
   costFormula: 10+1*(n-1)
   costUnit: 3
   unlockRequirementLevel: 1
-  description1: 
+  description1: Expands the area of effect for your attacks
   description2: 
