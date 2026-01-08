@@ -60,21 +60,33 @@ public class ControlUpgradeButton : MonoBehaviour
     
     private void ClampPositions()
     {
-        // Clamp target object position (using UI anchoredPosition)
+        // Get current scale factor (use X scale as reference)
+        float targetScale = targetObject != null ? targetObject.transform.localScale.x : 1f;
+        float bgScale = background != null ? background.transform.localScale.x : 1f;
+        
+        // Clamp target object position (bounds scale with zoom)
         if (limitTargetMovement && targetRect != null)
         {
+            // Scale bounds based on zoom level
+            Vector2 scaledMin = targetMinPosition * targetScale;
+            Vector2 scaledMax = targetMaxPosition * targetScale;
+            
             Vector2 pos = targetRect.anchoredPosition;
-            pos.x = Mathf.Clamp(pos.x, targetMinPosition.x, targetMaxPosition.x);
-            pos.y = Mathf.Clamp(pos.y, targetMinPosition.y, targetMaxPosition.y);
+            pos.x = Mathf.Clamp(pos.x, scaledMin.x, scaledMax.x);
+            pos.y = Mathf.Clamp(pos.y, scaledMin.y, scaledMax.y);
             targetRect.anchoredPosition = pos;
         }
         
-        // Clamp background position (using UI anchoredPosition)
+        // Clamp background position (bounds scale with zoom)
         if (limitBackgroundMovement && backgroundRect != null)
         {
+            // Scale bounds based on zoom level
+            Vector2 scaledBgMin = backgroundMinPosition * bgScale;
+            Vector2 scaledBgMax = backgroundMaxPosition * bgScale;
+            
             Vector2 bgPos = backgroundRect.anchoredPosition;
-            bgPos.x = Mathf.Clamp(bgPos.x, backgroundMinPosition.x, backgroundMaxPosition.x);
-            bgPos.y = Mathf.Clamp(bgPos.y, backgroundMinPosition.y, backgroundMaxPosition.y);
+            bgPos.x = Mathf.Clamp(bgPos.x, scaledBgMin.x, scaledBgMax.x);
+            bgPos.y = Mathf.Clamp(bgPos.y, scaledBgMin.y, scaledBgMax.y);
             backgroundRect.anchoredPosition = bgPos;
         }
     }
