@@ -30,15 +30,48 @@ public class GameConfig : ScriptableObject
     [Tooltip("EXP needed = level × this value (100 = level 1 needs 100, level 2 needs 200...)")]
     public int expPerLevelMultiplier = 100;
 
-    [Header("👾 Enemy Scaling")]
-    [Tooltip("Multiply enemy HP by this (on top of level)")]
-    public float enemyHealthMultiplier = 1f;
+    [Header("👾 Enemy Scaling (Per Level)")]
+    [Tooltip("Multiply enemy HP by this for each level (index 0 = level 1, index 1 = level 2, etc.)")]
+    public float[] enemyHealthMultipliers = new float[] { 1f, 1f, 1f, 1f, 1f };
     
-    [Tooltip("Multiply enemy reflection by this (on top of level)")]
-    public float enemyReflectionMultiplier = 1f;
+    [Tooltip("Multiply enemy reflection by this for each level (index 0 = level 1, index 1 = level 2, etc.)")]
+    public float[] enemyReflectionMultipliers = new float[] { 1f, 1f, 1f, 1f, 1f };
     
-    [Tooltip("Multiply currency drop by this (on top of level)")]
-    public float enemyCurrencyMultiplier = 1f;
+    [Tooltip("Multiply currency drop by this for each level (index 0 = level 1, index 1 = level 2, etc.)")]
+    public float[] enemyCurrencyMultipliers = new float[] { 1f, 1f, 1f, 1f, 1f };
+    
+    /// <summary>
+    /// 🎯 Get enemy health multiplier for the given level (1-based)
+    /// Falls back to last value if level exceeds array length
+    /// </summary>
+    public float GetEnemyHealthMultiplier(int level)
+    {
+        if (enemyHealthMultipliers == null || enemyHealthMultipliers.Length == 0) return 1f;
+        int index = Mathf.Clamp(level - 1, 0, enemyHealthMultipliers.Length - 1);
+        return enemyHealthMultipliers[index];
+    }
+    
+    /// <summary>
+    /// 🎯 Get enemy reflection multiplier for the given level (1-based)
+    /// Falls back to last value if level exceeds array length
+    /// </summary>
+    public float GetEnemyReflectionMultiplier(int level)
+    {
+        if (enemyReflectionMultipliers == null || enemyReflectionMultipliers.Length == 0) return 1f;
+        int index = Mathf.Clamp(level - 1, 0, enemyReflectionMultipliers.Length - 1);
+        return enemyReflectionMultipliers[index];
+    }
+    
+    /// <summary>
+    /// 🎯 Get enemy currency multiplier for the given level (1-based)
+    /// Falls back to last value if level exceeds array length
+    /// </summary>
+    public float GetEnemyCurrencyMultiplier(int level)
+    {
+        if (enemyCurrencyMultipliers == null || enemyCurrencyMultipliers.Length == 0) return 1f;
+        int index = Mathf.Clamp(level - 1, 0, enemyCurrencyMultipliers.Length - 1);
+        return enemyCurrencyMultipliers[index];
+    }
 
     [Header("⚔️ Combat")]
     [Tooltip("Minimum damage after armor (can't go below this)")]

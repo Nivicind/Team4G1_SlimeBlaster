@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
         if (enemyData != null)
         {
             int stage = Stage.Instance.GetStage();
-            float healthMult = GameConfig.Instance != null ? GameConfig.Instance.enemyHealthMultiplier : 1f;
+            float healthMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyHealthMultiplier(stage) : 1f;
             maxHealth = Mathf.RoundToInt(enemyData.hp * stage * healthMult);
             currentHealth = maxHealth;
         }
@@ -116,7 +116,7 @@ public class Enemy : MonoBehaviour
     {
         // Return multiplier scaled by stage
         int stage = Stage.Instance.GetStage();
-        float reflectMult = GameConfig.Instance != null ? GameConfig.Instance.enemyReflectionMultiplier : 1f;
+        float reflectMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyReflectionMultiplier(stage) : 1f;
         return enemyData.baseReflectionMultiplier * stage * reflectMult;
     }
 
@@ -164,7 +164,7 @@ public class Enemy : MonoBehaviour
         if (selectedPool == null) return;
 
         int stage = Stage.Instance.GetStage();
-        float currencyMult = GameConfig.Instance != null ? GameConfig.Instance.enemyCurrencyMultiplier : 1f;
+        float currencyMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyCurrencyMultiplier(stage) : 1f;
         int baseAmount = Mathf.RoundToInt(enemyData.baseCurrencyAmount * stage * currencyMult);
         
         // Add additional currency drops based on the currency type
