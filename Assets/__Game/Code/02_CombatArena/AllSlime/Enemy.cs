@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     private bool justSpawned = true;
     private Vector2 direction;
     private bool directionSet = false;
-    private PlayerCombatArena playerCombatArena; // 🎮 Cached reference for healing on kill
+    protected PlayerCombatArena playerCombatArena; // 🎮 Cached reference for healing on kill
 
     protected virtual void OnEnable()
     {

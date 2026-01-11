@@ -464,10 +464,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5632783557099033302}
   - component: {fileID: 3549444197383347623}
+  - component: {fileID: -6107826859941863869}
   - component: {fileID: 4581018765012801027}
   - component: {fileID: 7435327021471650000}
-  - component: {fileID: 5453961987722619322}
-  - component: {fileID: -6107826859941863869}
+  - component: {fileID: -7463254664067618028}
   m_Layer: 0
   m_Name: BossEnemy
   m_TagString: Boss
@@ -509,6 +509,17 @@ CircleCollider2D:
   m_Offset: {x: -0.79, y: -3.96}
   serializedVersion: 2
   m_Radius: 14.9
+--- !u!210 &-6107826859941863869
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7570439101151105090}
+  m_Enabled: 1
+  m_SortingLayerID: 1431183063
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!114 &4581018765012801027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,7 +555,7 @@ MonoBehaviour:
   playerStats: {fileID: 0}
   targetPosition: {x: 0, y: 0}
   isDefeated: 0
---- !u!114 &5453961987722619322
+--- !u!114 &-7463254664067618028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -553,7 +564,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7570439101151105090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0eb070f41ffeb647be9a311b4af8f50, type: 3}
+  m_Script: {fileID: 11500000, guid: c6c438a8e6c3ef842bf58da06ca31dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   idle:
@@ -641,32 +652,40 @@ MonoBehaviour:
   sortingGroup: {fileID: -6107826859941863869}
   feet: {fileID: 1332457175881324958}
   frameChangeDuration: 0.1
-  blinkDuration: 0.4
-  hurtDuration: 0.6
-  blinkMinInterval: 4
-  blinkMaxInterval: 5
-  glowAmount: 3
+  blinkDuration: 0.3
+  hurtDuration: 0.3
+  blinkMinInterval: 0.5
+  blinkMaxInterval: 1
+  glowAmount: 2
   glowDuration: 0.2
-  deathScaleMultiplier: 1.25
+  deathScaleMultiplier: 1.2
   deathScaleDuration: 0
-  deathFlashDuration: 0.2
+  deathFlashDuration: 0.1
   deathEase: 27
   particleGroups:
   - particles:
     - {fileID: 2506471792721207959}
     - {fileID: 7867549238513487076}
     - {fileID: 2506471791881874638}
---- !u!210 &-6107826859941863869
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7570439101151105090}
-  m_Enabled: 1
-  m_SortingLayerID: 1431183063
-  m_SortingLayer: 3
-  m_SortingOrder: 0
+  pinkSlimeDeath:
+  - {fileID: 21300000, guid: 298052734e42f764fa8f1b06a3ea1222, type: 3}
+  - {fileID: 21300000, guid: 1cb3b2e67cbb5424cbc44a113f82181e, type: 3}
+  - {fileID: 21300000, guid: 7d4e86c372fbe01469785a31d6ecac08, type: 3}
+  - {fileID: 21300000, guid: a45593709b3b88f4a959403c8350ed69, type: 3}
+  - {fileID: 21300000, guid: 80e31e4cee61043429dd161b9e427c47, type: 3}
+  - {fileID: 21300000, guid: 064a9f301d37f1a4282e26721282d4e5, type: 3}
+  - {fileID: 21300000, guid: 2bb2d1c04cd801846b2d4fd5e76558dc, type: 3}
+  - {fileID: 21300000, guid: e8c4d3f077deacd43b4d40a7ab3016db, type: 3}
+  - {fileID: 21300000, guid: d15a40e806fc0414dacb0a7a378e82a0, type: 3}
+  - {fileID: 21300000, guid: 0ca9100c0b3fd0d42ad633a96540e043, type: 3}
+  - {fileID: 21300000, guid: eff6cf77a5db074479f76e0e1aa25603, type: 3}
+  - {fileID: 21300000, guid: 9e22e8df31a633646a9494c192cfdf7c, type: 3}
+  pinkSlimeDeathParticles: []
+  shadowSpriteRenderer: {fileID: 1749879963019959781}
+  pinkSlimeDeathFrameDuration: 0.15
+  waitTimeForShowWin: 5
+  deathShakeDuration: 3
+  deathShakeIntensity: 4
 --- !u!1001 &4360570549935996486
 PrefabInstance:
   m_ObjectHideFlags: 0

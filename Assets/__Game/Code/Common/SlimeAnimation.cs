@@ -43,6 +43,7 @@ public class SlimeAnimation : MonoBehaviour
     private enum AnimState { Idle, Blink, Hurt }
     private AnimState currentState = AnimState.Idle;
     private bool isHurtPlaying;
+    protected bool isPlayingDeathAnimation = false;  // 🚩 Flag to stop normal animation during death
 
     [Header("Death Animation Settings")]
     public float deathScaleMultiplier = 1.2f;
@@ -92,6 +93,9 @@ public class SlimeAnimation : MonoBehaviour
 
     void Update()
     {
+        // 🚩 Skip normal animation if death animation is playing
+        if (isPlayingDeathAnimation) return;
+        
         frameTimer += Time.deltaTime;
         if (frameTimer >= frameChangeDuration)
         {

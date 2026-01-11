@@ -65,6 +65,7 @@ public class PlayerCombatArena : MonoBehaviour
     private int currentExp;
     private Camera mainCamera;
     private bool isDead = false;
+    private bool combatStopped = false;  // 🚩 Stops attacks but allows movement
 
     // 💰 Track collected currency during this run
     private Dictionary<EnumCurrency, int> collectedCurrency = new Dictionary<EnumCurrency, int>();
@@ -77,12 +78,18 @@ public class PlayerCombatArena : MonoBehaviour
         if (bossEnemy == null)
         {
             bossEnemy = FindObjectOfType<Boss>(true);
+        }
+        
+        // ♻️ Always reset boss defeated state when level starts
+        if (bossEnemy != null)
+        {
             bossEnemy.isDefeated = false;
         }
         
         // 🔄 Reset player position and state
         transform.position = Vector3.zero;
         isDead = false;
+        combatStopped = false;  // ♻️ Reset combat stopped flag for new game
         
         // 💸 Reset collected currency
         collectedCurrency.Clear();
@@ -450,6 +457,9 @@ public class PlayerCombatArena : MonoBehaviour
     }
     public int TakeDamage(int damage)
     {
+        // � Don't take damage if combat is stopped
+        if (combatStopped) return 0;
+        
         // 🛡️ Apply armor reduction (baseArmor + armor)
         int baseArmorValue = playerStats.GetStatValue(EnumStat.baseArmor);
         int armorValue = playerStats.GetStatValue(EnumStat.armor);
@@ -469,6 +479,9 @@ public class PlayerCombatArena : MonoBehaviour
     
     public int TakeDamageFromBoss(int damage)
     {
+        // 🚩 Don't take damage if combat is stopped
+        if (combatStopped) return 0;
+        
         // 🛡️ Apply baseArmor + armor + bossArmor reduction when taking reflection damage from boss
         int baseArmorValue = playerStats.GetStatValue(EnumStat.baseArmor);
         int armorValue = playerStats.GetStatValue(EnumStat.armor);
@@ -567,6 +580,24 @@ public class PlayerCombatArena : MonoBehaviour
         int hpValue = playerStats.GetStatValue(EnumStat.hp);
         int maxHp = baseHpValue + hpValue;
         currentHp = Mathf.Min(currentHp, maxHp);
+    }
+
+    /// <summary>
+    /// 🛑 Stop combat - Player stops taking damage and attacking but can still move
+    /// Called when pink slime boss dies to freeze combat state
+    /// </summary>
+    public void StopCombat()
+    {
+        combatStopped = true;  // 🚩 This stops attacks but player can still move
+        StopAllCoroutines();  // Stop attack coroutines
+    }
+
+    /// <summary>
+    /// 🏆 Trigger ShowWin from external source (Pink Slime death)
+    /// </summary>
+    public void TriggerShowWin()
+    {
+        ShowWin();
     }
 
 #if UNITY_EDITOR
