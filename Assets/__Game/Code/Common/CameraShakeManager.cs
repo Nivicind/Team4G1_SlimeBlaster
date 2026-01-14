@@ -18,8 +18,7 @@ public class CameraShakeManager : Singleton<CameraShakeManager>
     
     [Header("UI Shake Settings")]
     [SerializeField] private bool shakeUI = true;           // Whether to shake UI backgrounds
-    [SerializeField] private float uiShakeDuration = 0.15f; // UI shake duration
-    [SerializeField] private float uiShakeIntensity = 15f;  // UI shake intensity (pixels)
+    [SerializeField] private float uiShakeIntensityMultiply = 15f;  // UI shake intensity (pixels)
     
     private Vector3 originalCameraPos;
     private List<Vector3> originalBackgroundPositions = new List<Vector3>();
@@ -157,9 +156,9 @@ public class CameraShakeManager : Singleton<CameraShakeManager>
                 StoreOriginalBackgroundPositions();
             }
             
-            uiCurrentDuration = uiShakeDuration;
-            uiCurrentIntensity = uiShakeIntensity;
-            uiMaxDuration = uiShakeDuration;
+            uiCurrentDuration = duration;
+            uiCurrentIntensity = intensity * uiShakeIntensityMultiply;
+            uiMaxDuration = duration;
             isUIShaking = true;
         }
     }

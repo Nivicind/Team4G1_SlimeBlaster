@@ -15329,11 +15329,10 @@ MonoBehaviour:
   - {fileID: 235655266}
   - {fileID: 605810562}
   - {fileID: 1168335551}
-  defaultDuration: 0.09
+  defaultDuration: 0.12
   defaultIntensity: 1.25
   shakeUI: 1
-  uiShakeDuration: 0.09
-  uiShakeIntensity: 12
+  uiShakeIntensityMultiply: 10
 --- !u!1 &1304174016
 GameObject:
   m_ObjectHideFlags: 0
