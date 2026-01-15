@@ -17,21 +17,30 @@ MonoBehaviour:
   enemyHealthMultipliers:
   - 1
   - 2
+  - 2.5
   - 3
+  - 3.6
   - 4
-  - 5
+  - 4.2
+  - 4.5
   enemyReflectionMultipliers:
   - 1
   - 2
+  - 2.5
   - 3
+  - 3.6
   - 4
-  - 5
+  - 4.2
+  - 4.5
   enemyCurrencyMultipliers:
   - 1
   - 2
+  - 2.5
   - 3
+  - 3.6
   - 4
-  - 5
+  - 4.2
+  - 4.5
   minDamageAfterArmor: 1
   minAttackSpeed: 0.01
   maxAttackSizeCount: 10

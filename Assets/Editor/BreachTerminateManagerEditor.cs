@@ -16,6 +16,12 @@ public class BreachTerminateManagerEditor : Editor
 
         GUILayout.BeginHorizontal();
 
+        // Show Menu Scene button
+        if (GUILayout.Button("Show Menu", GUILayout.Height(30)))
+        {
+            ShowMenuScene(manager);
+        }
+
         // Show Upgrade Scene button
         if (GUILayout.Button("Show Upgrade", GUILayout.Height(30)))
         {
@@ -37,8 +43,24 @@ public class BreachTerminateManagerEditor : Editor
         GUILayout.EndHorizontal();
     }
 
+    private void ShowMenuScene(BreachTerminateManager manager)
+    {
+        if (manager.menuScene != null) manager.menuScene.SetActive(true);
+
+        foreach (var scene in manager.upgradeScenes)
+            if (scene != null) scene.SetActive(false);
+
+        foreach (var scene in manager.combatScenes)
+            if (scene != null) scene.SetActive(false);
+
+        if (manager.breachButton != null) manager.breachButton.gameObject.SetActive(false);
+        if (manager.terminateButton != null) manager.terminateButton.gameObject.SetActive(false);
+    }
+
     private void ShowUpgradeScene(BreachTerminateManager manager)
     {
+        if (manager.menuScene != null) manager.menuScene.SetActive(false);
+
         foreach (var scene in manager.upgradeScenes)
             if (scene != null) scene.SetActive(true);
 
@@ -51,6 +73,8 @@ public class BreachTerminateManagerEditor : Editor
 
     private void ShowCombatScene(BreachTerminateManager manager)
     {
+        if (manager.menuScene != null) manager.menuScene.SetActive(false);
+
         foreach (var scene in manager.upgradeScenes)
             if (scene != null) scene.SetActive(false);
 
@@ -63,6 +87,8 @@ public class BreachTerminateManagerEditor : Editor
 
     private void ShowAllScenes(BreachTerminateManager manager)
     {
+        if (manager.menuScene != null) manager.menuScene.SetActive(true);
+
         foreach (var scene in manager.upgradeScenes)
             if (scene != null) scene.SetActive(true);
 

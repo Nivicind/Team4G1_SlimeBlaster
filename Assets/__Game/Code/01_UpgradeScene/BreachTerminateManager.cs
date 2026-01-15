@@ -10,7 +10,6 @@ public class BreachTerminateManager : MonoBehaviour
     public Button startButton;
     public Button breachButton;
     public Button terminateButton;
-    public Button showMenuButton;
 
     [Header("GameOver Buttons")]
     public List<Button> toHomeButtons;
@@ -34,9 +33,6 @@ public class BreachTerminateManager : MonoBehaviour
 
         breachButton.onClick.AddListener(OnBreachClicked);
         terminateButton.onClick.AddListener(OnTerminateClicked);
-
-        if (showMenuButton != null)
-            showMenuButton.onClick.AddListener(OnShowMenuClicked);
 
         foreach (var button in toHomeButtons)
         {
@@ -66,7 +62,9 @@ public class BreachTerminateManager : MonoBehaviour
         breachButton.gameObject.SetActive(false);
         terminateButton.gameObject.SetActive(false);
 
-        // No music during menu
+        // 🎵 Menu music
+        if (backgroundMusic != null)
+            backgroundMusic.TransitionToMenuMusic();
     }
 
     private void OnStartClicked()
@@ -130,8 +128,6 @@ public class BreachTerminateManager : MonoBehaviour
 
             terminateButton.gameObject.SetActive(false);
             breachButton.gameObject.SetActive(true);
-
-            // 🎵 Back to upgrade music
             if (backgroundMusic != null)
                 backgroundMusic.TransitionToUpgradeMusic();
         });
@@ -184,32 +180,6 @@ public class BreachTerminateManager : MonoBehaviour
             // 🎵 Combat music again
             if (backgroundMusic != null)
                 backgroundMusic.TransitionToCombatMusic();
-        });
-    }
-
-    private void OnShowMenuClicked()
-    {
-        // 🔊 Play button click sound
-        GlobalSoundManager.PlaySound(SoundType.buttonClick);
-        
-        transition.PlayTransition(() =>
-        {
-            if (gameOverPanel != null)
-                gameOverPanel.SetActive(false);
-
-            foreach (var scene in upgradeScenes)
-                if (scene != null) scene.SetActive(false);
-
-            foreach (var scene in combatScenes)
-                if (scene != null) scene.SetActive(false);
-
-            if (menuScene != null)
-                menuScene.SetActive(true);
-
-            breachButton.gameObject.SetActive(false);
-            terminateButton.gameObject.SetActive(false);
-
-            // No music during menu
         });
     }
 }

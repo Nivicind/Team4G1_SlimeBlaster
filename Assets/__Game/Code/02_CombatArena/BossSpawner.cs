@@ -41,6 +41,14 @@ public class BossSpawner : MonoBehaviour
         timer = 0f;
         bossSpawned = false;
         
+        // If not newest stage (boss already defeated), fill progress bar and skip spawn
+        if (Stage.Instance != null && Stage.Instance.GetStage() != Stage.Instance.GetUnlockedStage())
+        {
+            bossSpawned = true;
+            if (progressBar != null)
+                progressBar.fillAmount = 1f;
+        }
+        
         // Hide boss at start
         if (bossEnemy != null)
         {
@@ -63,6 +71,16 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
+        // Only spawn boss on newest stage (current stage == unlocked stage)
+        if (Stage.Instance != null && Stage.Instance.GetStage() != Stage.Instance.GetUnlockedStage())
+        {
+            // Not newest stage, boss already defeated - fill bar and skip
+            if (progressBar != null)
+                progressBar.fillAmount = 1f;
+            bossSpawned = true;
+            return;
+        }
+
         if (!bossSpawned)
         {
             timer += Time.deltaTime;
@@ -92,6 +110,13 @@ public class BossSpawner : MonoBehaviour
 
     private void SpawnBoss()
     {
+        // Check level manager
+        if (LevelManager.Instance != null && !LevelManager.Instance.ShouldBossSpawn())
+        {
+            Debug.Log("BossSpawner: Boss not spawning - not current level");
+            return;
+        }
+
         if (bossEnemy == null || pointListA == null || pointListB == null) return;
         if (pointListA.Length == 0 || pointListB.Length == 0) return;
         

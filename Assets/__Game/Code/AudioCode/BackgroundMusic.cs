@@ -9,6 +9,7 @@ public class BackgroundMusic : MonoBehaviour
     public AudioSource audioSource;
 
     [Header("Music Lists")]
+    public List<AudioClip> menuMusic;
     public List<AudioClip> upgradeMusic;
     public List<AudioClip> combatMusic;
 
@@ -20,6 +21,7 @@ public class BackgroundMusic : MonoBehaviour
     public float timeIncreaseVolume = 0.5f;
 
     // Internal state
+    private List<AudioClip> menuPool = new();
     private List<AudioClip> upgradePool = new();
     private List<AudioClip> combatPool = new();
 
@@ -38,11 +40,17 @@ public class BackgroundMusic : MonoBehaviour
 
     private void ResetPools()
     {
+        menuPool = new List<AudioClip>(menuMusic);
         upgradePool = new List<AudioClip>(upgradeMusic);
         combatPool = new List<AudioClip>(combatMusic);
     }
 
     // ---------------- PUBLIC API ----------------
+
+    public void TransitionToMenuMusic()
+    {
+        PlayFromList(menuMusic, menuPool);
+    }
 
     public void TransitionToUpgradeMusic()
     {
