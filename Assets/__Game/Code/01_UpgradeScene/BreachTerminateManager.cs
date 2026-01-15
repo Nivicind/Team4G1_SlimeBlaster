@@ -7,6 +7,7 @@ public class BreachTerminateManager : MonoBehaviour
     private Transition transition;
 
     [Header("Buttons")]
+    public Button startButton;
     public Button breachButton;
     public Button terminateButton;
 
@@ -15,6 +16,7 @@ public class BreachTerminateManager : MonoBehaviour
     public List<Button> restartButtons;
 
     [Header("Targets")]
+    public GameObject menuScene;
     public List<GameObject> upgradeScenes;
     public List<GameObject> combatScenes;
     public GameObject gameOverPanel;
@@ -25,6 +27,9 @@ public class BreachTerminateManager : MonoBehaviour
     private void Awake()
     {
         transition = GetComponent<Transition>();
+
+        if (startButton != null)
+            startButton.onClick.AddListener(OnStartClicked);
 
         breachButton.onClick.AddListener(OnBreachClicked);
         terminateButton.onClick.AddListener(OnTerminateClicked);
@@ -44,19 +49,44 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void Start()
     {
-        // Start in Upgrade state
+        // Start in Menu state
+        if (menuScene != null)
+            menuScene.SetActive(true);
+
         foreach (var scene in upgradeScenes)
-            if (scene != null) scene.SetActive(true);
+            if (scene != null) scene.SetActive(false);
 
         foreach (var scene in combatScenes)
             if (scene != null) scene.SetActive(false);
 
-        breachButton.gameObject.SetActive(true);
+        breachButton.gameObject.SetActive(false);
         terminateButton.gameObject.SetActive(false);
 
-        // 🎵 Upgrade music
-        if (backgroundMusic != null)
-            backgroundMusic.TransitionToUpgradeMusic();
+        // No music during menu
+    }
+
+    private void OnStartClicked()
+    {
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
+        
+        transition.PlayTransition(() =>
+        {
+            // Hide menu
+            if (menuScene != null)
+                menuScene.SetActive(false);
+
+            // Show upgrade scene
+            foreach (var scene in upgradeScenes)
+                if (scene != null) scene.SetActive(true);
+
+            breachButton.gameObject.SetActive(true);
+            terminateButton.gameObject.SetActive(false);
+
+            // 🎵 Upgrade music
+            if (backgroundMusic != null)
+                backgroundMusic.TransitionToUpgradeMusic();
+        });
     }
 
     private void OnBreachClicked()
