@@ -35,6 +35,7 @@ public class MenuAnimation : MonoBehaviour
 
     [Header("Playback")]
     [SerializeField] private bool autoPlayOnStart = true;
+    [SerializeField] private float startDelay = 1.5f;
 
     private Vector2 titleStartPos;
     private Vector3 titleStartScale;
@@ -65,8 +66,18 @@ public class MenuAnimation : MonoBehaviour
         KillIdleTweens();
         ResetToStartState();
 
+        // Hide all elements at start
+        HideAllElements();
+
         sequence = DOTween.Sequence();
 
+        // Wait for start delay
+        sequence.AppendInterval(startDelay);
+
+        // Show all elements after delay
+        sequence.AppendCallback(ShowAllElements);
+
+        // Now run the original animation sequence
         if (title != null)
         {
             sequence.Append(title.DOScale(titleStartScale, titleScaleDuration).SetEase(Ease.OutBack));
@@ -74,7 +85,10 @@ public class MenuAnimation : MonoBehaviour
 
         if (splash != null)
         {
-            sequence.Insert(delayAfterTitle, splash.DOScale(splashStartScale, splashDuration).SetEase(Ease.OutElastic));
+            // Splash and slimes start delayAfterTitle seconds after title STARTS (not ends)
+            // Title starts at startDelay, so splash starts at startDelay + delayAfterTitle
+            float splashStartTime = startDelay + delayAfterTitle;
+            sequence.Insert(splashStartTime, splash.DOScale(splashStartScale, splashDuration).SetEase(Ease.OutElastic));
             foreach (var slime in slimes)
             {
                 if (slime == null || slime.slime == null)
@@ -82,14 +96,44 @@ public class MenuAnimation : MonoBehaviour
 
                 var to = slime.toPoint != null ? slime.toPoint.anchoredPosition : slime.slime.anchoredPosition;
 
-                sequence.Join(slime.slime.DOAnchorPos(to, slimeMoveDuration).SetEase(Ease.OutBack));
-                sequence.Join(slime.slime.DOScale(slime.endScale, slimeMoveDuration * 0.9f).SetEase(Ease.OutElastic));
+                sequence.Insert(splashStartTime, slime.slime.DOAnchorPos(to, slimeMoveDuration).SetEase(Ease.OutBack));
+                sequence.Insert(splashStartTime, slime.slime.DOScale(slime.endScale, slimeMoveDuration * 0.9f).SetEase(Ease.OutElastic));
             }
         }
 
         sequence.AppendInterval(delayAfterSplash);
 
         sequence.OnComplete(StartIdleWobble);
+    }
+
+    private void HideAllElements()
+    {
+        if (title != null)
+            title.gameObject.SetActive(false);
+
+        if (splash != null)
+            splash.gameObject.SetActive(false);
+
+        foreach (var slime in slimes)
+        {
+            if (slime?.slime != null)
+                slime.slime.gameObject.SetActive(false);
+        }
+    }
+
+    private void ShowAllElements()
+    {
+        if (title != null)
+            title.gameObject.SetActive(true);
+
+        if (splash != null)
+            splash.gameObject.SetActive(true);
+
+        foreach (var slime in slimes)
+        {
+            if (slime?.slime != null)
+                slime.slime.gameObject.SetActive(true);
+        }
     }
 
     private void CacheDefaults()
