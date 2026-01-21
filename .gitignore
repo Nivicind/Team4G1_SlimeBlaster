@@ -99,3 +99,4 @@ InitTestScene*.unity*
 # Mizu custom project modifications
 /MizuGitCommand.txt
 /.github
+Assets/__Game/Art/Fonts/CutePixel SDF.asset
