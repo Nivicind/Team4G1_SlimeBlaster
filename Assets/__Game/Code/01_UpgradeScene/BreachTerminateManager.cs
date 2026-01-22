@@ -26,6 +26,7 @@ public class BreachTerminateManager : MonoBehaviour
 
     [Header("UI")]
     public UIController uiController;
+    public UIStageControl uiStageControl; // 🎮 Stage selection UI
 
     private void Awake()
     {
@@ -96,12 +97,27 @@ public class BreachTerminateManager : MonoBehaviour
 
     private void OnBreachClicked()
     {
+        // � Check if current stage is playable (not locked)
+        if (uiStageControl != null && !uiStageControl.IsCurrentStagePlayable())
+        {
+            // Stage is locked - don't proceed, UIStageControl will show error effect
+            GlobalSoundManager.PlaySound(SoundType.buttonClick);
+            return;
+        }
+        
         // 🔊 Play button click sound
         GlobalSoundManager.PlaySound(SoundType.buttonClick);
 
         // 🎯 Reset UI panels to hidden state before leaving upgrade scene
         if (uiController != null)
             uiController.ResetAllPanelsToHiddenState();
+        
+        // 🎮 Set the selected stage from UIStageControl (only unlocked stages)
+        if (uiStageControl != null && Stage.Instance != null)
+        {
+            int selectedStage = uiStageControl.GetSelectedStage();
+            Stage.Instance.SetStage(selectedStage);
+        }
         
         transition.PlayTransition(() =>
         {

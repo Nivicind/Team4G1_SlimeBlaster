@@ -120,6 +120,31 @@ public class Stage : Singleton<Stage>
     {
         return stage;
     }
+    
+    /// <summary>
+    /// 🎯 Set the current stage directly (for stage selection UI)
+    /// </summary>
+    public void SetStage(int newStage)
+    {
+        if (newStage >= 1 && newStage <= unlockedStage)
+        {
+            stage = newStage;
+            UpdateStageText();
+            UpdateButtonVisibility();
+            
+            // 💾 Save stage data
+            if (SaveSystem.Instance != null)
+            {
+                SaveSystem.Instance.SaveStageData(stage, unlockedStage);
+            }
+            
+            Debug.Log($"Stage set to: {stage}");
+        }
+        else
+        {
+            Debug.LogWarning($"Cannot set stage to {newStage}. Must be between 1 and {unlockedStage}");
+        }
+    }
 
     public void UnlockStages(int amount)
     {

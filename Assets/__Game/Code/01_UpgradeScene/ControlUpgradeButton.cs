@@ -24,6 +24,9 @@ public class ControlUpgradeButton : MonoBehaviour
     public Vector2 backgroundMinPosition = new Vector2(-250f, -400f);
     public Vector2 backgroundMaxPosition = new Vector2(250f, 400f);
 
+    [Header("🚫 Ignore Region (Stage Select)")]
+    public RectTransform ignoreRegion; // Touches in this region won't affect upgrade controller
+
     private Vector3 lastMousePosition;
     private Vector3 dragStartPosition;
     private bool isDragging = false;
@@ -35,6 +38,8 @@ public class ControlUpgradeButton : MonoBehaviour
     private RectTransform targetRect;
     private RectTransform backgroundRect;
     
+    private Camera uiCamera;
+    
     private void Start()
     {
         // Cache RectTransforms for UI elements
@@ -42,6 +47,11 @@ public class ControlUpgradeButton : MonoBehaviour
             targetRect = targetObject.GetComponent<RectTransform>();
         if (background != null)
             backgroundRect = background.GetComponent<RectTransform>();
+        
+        // Cache UI camera
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera)
+            uiCamera = canvas.worldCamera;
     }
 
     private void Update()
@@ -56,6 +66,15 @@ public class ControlUpgradeButton : MonoBehaviour
         
         // Clamp positions within bounds
         ClampPositions();
+    }
+    
+    /// <summary>
+    /// Check if position is inside the ignore region (stage select area)
+    /// </summary>
+    private bool IsInIgnoreRegion(Vector2 screenPosition)
+    {
+        if (ignoreRegion == null) return false;
+        return RectTransformUtility.RectangleContainsScreenPoint(ignoreRegion, screenPosition, uiCamera);
     }
     
     private void ClampPositions()
@@ -96,8 +115,14 @@ public class ControlUpgradeButton : MonoBehaviour
     {
         if (PlayerInputHandler.Instance.IsInputDown())
         {
+            Vector2 inputPos = PlayerInputHandler.Instance.GetInputScreenPosition();
+            
+            // Ignore if touch started in ignore region
+            if (IsInIgnoreRegion(inputPos))
+                return;
+            
             isDragging = true;
-            lastMousePosition = PlayerInputHandler.Instance.GetInputScreenPosition();
+            lastMousePosition = inputPos;
         }
 
         if (PlayerInputHandler.Instance.IsInputActive() && isDragging)
@@ -158,6 +183,10 @@ public class ControlUpgradeButton : MonoBehaviour
 
             if (touch.Value.phase == TouchPhase.Began)
             {
+                // Ignore if touch started in ignore region
+                if (IsInIgnoreRegion(touch.Value.position))
+                    return;
+                
                 isDragging = true;
                 lastMousePosition = touch.Value.position;
             }
