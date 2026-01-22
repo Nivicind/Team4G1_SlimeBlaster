@@ -19,6 +19,7 @@ public class BossSpawner : MonoBehaviour
 
     [Header("Progress Bar")]
     public Image progressBar;           // Progress bar fill image
+    [Range(0f, 30f)] public float progressBarVisualOffset = 4f;  // Make bar look X seconds slower than actual
     
     [Header("Debug Visualization")]
     public bool showSpawnGizmos = true; // Show spawn zones in Scene view

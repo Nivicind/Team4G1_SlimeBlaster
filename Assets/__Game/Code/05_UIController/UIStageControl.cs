@@ -44,6 +44,8 @@ public class UIStageControl : MonoBehaviour
     // Runtime generated stage images
     private List<RectTransform> stageImages = new List<RectTransform>();
     private List<CanvasGroup> stageCanvasGroups = new List<CanvasGroup>();
+    private float stageWidth;  // Width of each stage element
+    private float stageSpacing;  // Spacing between stages (from layout group)
     
     private int currentIndex = 0;
     private int selectedStage = 1; // The stage number player selected (1-based)
@@ -51,7 +53,6 @@ public class UIStageControl : MonoBehaviour
     private bool isCurrentStageUnlocked = true; // Track if current viewed stage is unlocked
     private int cachedUnlockedStage = 1; // Track unlocked stage count to detect changes
     private float containerStartX;
-    private float firstImageLocalX;
     
     // Swipe tracking
     private bool isDragging = false;
@@ -63,10 +64,15 @@ public class UIStageControl : MonoBehaviour
     
     private void Start()
     {
-        // Cache UI camera
+        // Cache UI camera (null is correct for ScreenSpaceOverlay)
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera)
-            uiCamera = canvas.worldCamera;
+        if (canvas != null)
+        {
+            if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
+                uiCamera = canvas.worldCamera;
+            else
+                uiCamera = null; // ScreenSpaceOverlay uses null camera
+        }
         
         // Generate stage images based on Stage singleton
         GenerateStageImages();
@@ -126,7 +132,7 @@ public class UIStageControl : MonoBehaviour
     }
     
     /// <summary>
-    /// 🔄 Recalculate container and first image positions (call when layout changes)
+    /// 🔄 Recalculate container position and stage dimensions
     /// </summary>
     private void RecalculatePositions()
     {
@@ -134,10 +140,19 @@ public class UIStageControl : MonoBehaviour
         if (stageContainer != null)
             containerStartX = stageContainer.anchoredPosition.x;
         
-        // Store first image's local X as the "center" reference
-        if (stageImages.Count > 0 && stageImages[0] != null)
+        // Get stage width from prefab
+        if (stagePrefab != null)
+            stageWidth = stagePrefab.sizeDelta.x;
+        
+        // Get spacing from HorizontalLayoutGroup if exists
+        HorizontalLayoutGroup layoutGroup = stageContainer.GetComponent<HorizontalLayoutGroup>();
+        if (layoutGroup != null)
         {
-            firstImageLocalX = stageImages[0].localPosition.x;
+            stageSpacing = layoutGroup.spacing;
+        }
+        else
+        {
+            stageSpacing = 0f;
         }
     }
     
@@ -246,6 +261,8 @@ public class UIStageControl : MonoBehaviour
     
     private void Update()
     {
+        if (!isInitialized) return;
+        
         HandleSwipe();
         
         // Check for unlock changes in real-time
@@ -276,7 +293,21 @@ public class UIStageControl : MonoBehaviour
     {
         if (isAnimating) return;
         
-        // Handle mouse input
+        // Use touch if available, otherwise use mouse
+        bool hasTouch = Input.touchCount > 0;
+        
+        if (hasTouch)
+        {
+            HandleTouchInput();
+        }
+        else
+        {
+            HandleMouseInput();
+        }
+    }
+    
+    private void HandleMouseInput()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos = Input.mousePosition;
@@ -298,30 +329,29 @@ public class UIStageControl : MonoBehaviour
         {
             EndSwipe(Input.mousePosition.x - dragStartX);
         }
+    }
+    
+    private void HandleTouchInput()
+    {
+        Touch touch = Input.GetTouch(0);
         
-        // Handle touch input
-        if (Input.touchCount == 1)
+        if (touch.phase == TouchPhase.Began)
         {
-            Touch touch = Input.GetTouch(0);
-            
-            if (touch.phase == TouchPhase.Began)
+            if (IsInSwipeRegion(touch.position))
             {
-                if (IsInSwipeRegion(touch.position))
-                {
-                    isDragging = true;
-                    dragStartX = touch.position.x;
-                    containerDragStartX = stageContainer.anchoredPosition.x;
-                }
+                isDragging = true;
+                dragStartX = touch.position.x;
+                containerDragStartX = stageContainer.anchoredPosition.x;
             }
-            else if (touch.phase == TouchPhase.Moved && isDragging)
-            {
-                float deltaX = touch.position.x - dragStartX;
-                stageContainer.anchoredPosition = new Vector2(containerDragStartX + deltaX, stageContainer.anchoredPosition.y);
-            }
-            else if ((touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) && isDragging)
-            {
-                EndSwipe(touch.position.x - dragStartX);
-            }
+        }
+        else if (touch.phase == TouchPhase.Moved && isDragging)
+        {
+            float deltaX = touch.position.x - dragStartX;
+            stageContainer.anchoredPosition = new Vector2(containerDragStartX + deltaX, stageContainer.anchoredPosition.y);
+        }
+        else if ((touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) && isDragging)
+        {
+            EndSwipe(touch.position.x - dragStartX);
         }
     }
     
@@ -473,14 +503,9 @@ public class UIStageControl : MonoBehaviour
         if (currentIndex < 0 || currentIndex >= stageImages.Count) return;
         if (stageImages[currentIndex] == null) return;
         
-        // Get selected image's local X position (from layout group)
-        RectTransform selectedImg = stageImages[currentIndex];
-        float selectedImageLocalX = selectedImg.localPosition.x;
-        
-        // Calculate how far to move: difference from first image position
-        float offsetFromFirst = selectedImageLocalX - firstImageLocalX;
-        
-        // Move container left by that offset (so selected image ends up where first image was)
+        // Calculate target position based on stage width and spacing
+        // Move container left by (index * (width + spacing)) to center selected stage
+        float offsetFromFirst = currentIndex * (stageWidth + stageSpacing);
         float targetX = containerStartX - offsetFromFirst;
         
         if (animate)

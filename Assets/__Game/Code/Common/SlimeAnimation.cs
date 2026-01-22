@@ -34,7 +34,7 @@ public class SlimeAnimation : MonoBehaviour
     [SerializeField] private float glowAmount = 4f;
     [SerializeField] private float glowDuration = 0.2f;
 
-    private int currentFrame;
+    protected int currentFrame;  // Protected so PinkSlimeAnimation can sync angry border
     private float frameTimer;
     private float blinkTimer;
     private float nextBlinkTime;
@@ -91,7 +91,7 @@ public class SlimeAnimation : MonoBehaviour
         SetMainGlow(0f);
     }
 
-    void Update()
+    protected virtual void Update()
     {
         // 🚩 Skip normal animation if death animation is playing
         if (isPlayingDeathAnimation) return;

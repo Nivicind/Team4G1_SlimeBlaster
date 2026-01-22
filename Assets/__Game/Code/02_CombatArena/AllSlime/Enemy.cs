@@ -118,7 +118,16 @@ public class Enemy : MonoBehaviour
         // Return multiplier scaled by stage
         int stage = Stage.Instance.GetStage();
         float reflectMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyReflectionMultiplier(stage) : 1f;
-        return enemyData.baseReflectionMultiplier * stage * reflectMult;
+        float baseMultiplier = enemyData.baseReflectionMultiplier * stage * reflectMult;
+        
+        // 😠 Check for angry multiplier (Boss with PinkSlimeAnimation)
+        PinkSlimeAnimation pinkAnim = slimeAnim as PinkSlimeAnimation;
+        if (pinkAnim != null && pinkAnim.IsAngry())
+        {
+            baseMultiplier *= pinkAnim.GetAngryReflectionMultiplier();
+        }
+        
+        return baseMultiplier;
     }
 
     protected virtual void Die()

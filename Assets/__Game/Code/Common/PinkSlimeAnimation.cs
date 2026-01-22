@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 🩷 Pink Slime Animation - Inherits from SlimeAnimation
 /// Special death animation for Boss Pink Slime with victory sequence
+/// Also supports Angry mode with aura and double reflection damage
 /// </summary>
 public class PinkSlimeAnimation : SlimeAnimation
 {
@@ -21,6 +22,34 @@ public class PinkSlimeAnimation : SlimeAnimation
     [Range(0f, 5f)] public float deathShakeDuration = 0.5f;
     [Range(0f, 5f)] public float deathShakeIntensity = 0.8f;
     
+    [Header("😠 Angry Animation")]
+    public List<Sprite> angryBorder;  // Angry border sprites (loops like idle)
+    [Range(0f, 60f)] public float angryDelay = 10f;  // Seconds before angry starts
+    
+    [Header("🔥 Aura Settings")]
+    public SpriteRenderer auraSpriteRenderer;  // Aura sprite renderer
+    public List<Sprite> auraSprites;  // Aura animation sprites
+    [Range(0.01f, 1f)] public float auraFrameDuration = 0.1f;  // Aura's own frame speed (independent)
+    [Range(1, 20)] public int auraFrameCycle = 3;  // How many full loops of aura
+    [Range(0f, 60f)] public float auraCooldown = 10f;  // Seconds after angry ends before next angry
+    
+    [Header("💥 Angry Damage Settings")]
+    public float angryReflectionMultiplier = 2f;  // Reflection damage multiplier when angry
+    
+    // Angry state
+    private bool isAngry = false;
+    
+    // Angry timing
+    private float angryDelayTimer = 0f;  // Counts up to angryDelay
+    private bool isOnCooldown = false;  // True after angry ends
+    private float cooldownTimer = 0f;  // Counts up to auraCooldown
+    
+    // Aura state (independent timer)
+    private bool isAuraPlaying = false;
+    private int auraFrameIndex = 0;
+    private float auraFrameTimer = 0f;
+    private int auraCompletedCycles = 0;
+    
     // Cached reference (named differently to avoid conflict with Enemy.playerCombatArena)
     private PlayerCombatArena cachedPlayerCombatArena;
     
@@ -32,6 +61,9 @@ public class PinkSlimeAnimation : SlimeAnimation
     {
         isPlayingDeathAnimation = false;
         
+        // Reset angry state
+        ResetAngry();
+        
         // 👁️ Show all sprites again
         if (liquidSpriteRenderer != null)
             liquidSpriteRenderer.enabled = true;
@@ -41,6 +73,198 @@ public class PinkSlimeAnimation : SlimeAnimation
             spriteMaskRenderer.enabled = true;
         if (shadowSpriteRenderer != null)
             shadowSpriteRenderer.enabled = true;
+    }
+    
+    protected override void Update()
+    {
+        // Skip if death animation playing
+        if (isPlayingDeathAnimation) return;
+        
+        // Handle angry delay timer
+        UpdateAngryDelay();
+        
+        // Always call base animation (liquid, hollowed, blink still play)
+        base.Update();
+        
+        // If angry, override ONLY the border sprite after base update
+        if (isAngry)
+        {
+            UpdateAngryAnimation();
+        }
+    }
+    
+    /// <summary>
+    /// ⏱️ Handle angry delay timer - starts angry after delay
+    /// </summary>
+    private void UpdateAngryDelay()
+    {
+        // If already angry, skip
+        if (isAngry) return;
+        
+        // If on cooldown, count cooldown first
+        if (isOnCooldown)
+        {
+            cooldownTimer += Time.deltaTime;
+            if (cooldownTimer >= auraCooldown)
+            {
+                cooldownTimer = 0f;
+                isOnCooldown = false;
+            }
+            return;
+        }
+        
+        // Count up delay timer
+        angryDelayTimer += Time.deltaTime;
+        
+        // Delay finished → start angry
+        if (angryDelayTimer >= angryDelay)
+        {
+            angryDelayTimer = 0f;
+            StartAngry();
+        }
+    }
+    
+    // ========== ANGRY ANIMATION ==========
+    
+    /// <summary>
+    /// 😠 Start angry mode - show angry border and aura
+    /// </summary>
+    public void StartAngry()
+    {
+        if (isAngry) return;
+        
+        isAngry = true;
+        
+        // Start aura immediately
+        StartAura();
+    }
+    
+    /// <summary>
+    /// 😌 Stop angry mode - return to normal, start cooldown
+    /// </summary>
+    public void StopAngry()
+    {
+        isAngry = false;
+        
+        // Start cooldown
+        isOnCooldown = true;
+        cooldownTimer = 0f;
+        
+        // Stop aura
+        StopAura();
+    }
+    
+    /// <summary>
+    /// 🔄 Reset angry (for respawn)
+    /// </summary>
+    public void ResetAngry()
+    {
+        angryDelayTimer = 0f;
+        isOnCooldown = false;
+        cooldownTimer = 0f;
+        StopAngry();
+        isOnCooldown = false;  // Don't start cooldown on reset
+    }
+    
+    /// <summary>
+    /// 😠 Update angry border animation (syncs with base class idle frame)
+    /// </summary>
+    private void UpdateAngryAnimation()
+    {
+        if (angryBorder == null || angryBorder.Count == 0) return;
+        
+        // Sync with base class frame index (use modulo for different sprite counts)
+        int syncedIndex = currentFrame % angryBorder.Count;
+        
+        // Apply angry sprite to border
+        if (mainSpriteRenderer != null)
+            mainSpriteRenderer.sprite = angryBorder[syncedIndex];
+        
+        // Update aura animation (independent timer)
+        UpdateAuraAnimation();
+    }
+    
+    // ========== AURA ANIMATION ==========
+    
+    /// <summary>
+    /// 🔥 Start aura animation from first frame
+    /// </summary>
+    private void StartAura()
+    {
+        if (auraSpriteRenderer == null || auraSprites == null || auraSprites.Count == 0) return;
+        
+        isAuraPlaying = true;
+        auraFrameIndex = 0;
+        auraFrameTimer = 0f;
+        auraCompletedCycles = 0;
+        
+        auraSpriteRenderer.enabled = true;
+        auraSpriteRenderer.sprite = auraSprites[0];
+    }
+    
+    /// <summary>
+    /// 🔥 Stop aura animation
+    /// </summary>
+    private void StopAura()
+    {
+        isAuraPlaying = false;
+        auraFrameIndex = 0;
+        auraFrameTimer = 0f;
+        auraCompletedCycles = 0;
+        
+        if (auraSpriteRenderer != null)
+            auraSpriteRenderer.enabled = false;
+    }
+    
+    /// <summary>
+    /// 🔥 Update aura animation - independent timer, counts cycles to end angry
+    /// </summary>
+    private void UpdateAuraAnimation()
+    {
+        if (!isAuraPlaying || auraSprites == null || auraSprites.Count == 0) return;
+        
+        // Aura has its own independent timer
+        auraFrameTimer += Time.deltaTime;
+        
+        if (auraFrameTimer >= auraFrameDuration)
+        {
+            auraFrameTimer = 0f;
+            
+            // Advance to next frame
+            auraFrameIndex++;
+            
+            // Check if completed one cycle
+            if (auraFrameIndex >= auraSprites.Count)
+            {
+                auraFrameIndex = 0;
+                auraCompletedCycles++;
+                
+                // Check if all cycles completed → end angry
+                if (auraCompletedCycles >= auraFrameCycle)
+                {
+                    StopAngry();
+                    return;
+                }
+            }
+        }
+        
+        if (auraSpriteRenderer != null)
+            auraSpriteRenderer.sprite = auraSprites[auraFrameIndex];
+    }
+    
+    // ========== PUBLIC GETTERS ==========
+    
+    /// <summary>
+    /// 😠 Check if currently angry
+    /// </summary>
+    public bool IsAngry() => isAngry;
+    
+    /// <summary>
+    /// 💥 Get the reflection damage multiplier (2x when angry, 1x otherwise)
+    /// </summary>
+    public float GetAngryReflectionMultiplier()
+    {
+        return isAngry ? angryReflectionMultiplier : 1f;
     }
     
     /// <summary>
