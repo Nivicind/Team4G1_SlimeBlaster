@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
         {
             int stage = Stage.Instance.GetStage();
             float healthMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyHealthMultiplier(stage) : 1f;
-            maxHealth = Mathf.RoundToInt(enemyData.hp * stage * healthMult);
+            maxHealth = Mathf.RoundToInt(enemyData.hp * healthMult);
             currentHealth = maxHealth;
         }
     }
@@ -115,10 +115,10 @@ public class Enemy : MonoBehaviour
 
     public float GetEnemyMultiplierBaseReflection()
     {
-        // Return multiplier scaled by stage
+        // Return multiplier scaled by stage config
         int stage = Stage.Instance.GetStage();
         float reflectMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyReflectionMultiplier(stage) : 1f;
-        float baseMultiplier = enemyData.baseReflectionMultiplier * stage * reflectMult;
+        float baseMultiplier = enemyData.baseReflectionMultiplier * reflectMult;
         
         // 😠 Check for angry multiplier (Boss with PinkSlimeAnimation)
         PinkSlimeAnimation pinkAnim = slimeAnim as PinkSlimeAnimation;
@@ -175,7 +175,7 @@ public class Enemy : MonoBehaviour
 
         int stage = Stage.Instance.GetStage();
         float currencyMult = GameConfig.Instance != null ? GameConfig.Instance.GetEnemyCurrencyMultiplier(stage) : 1f;
-        int baseAmount = Mathf.RoundToInt(enemyData.baseCurrencyAmount * stage * currencyMult);
+        int baseAmount = enemyData.baseCurrencyAmount;
         
         // Add additional currency drops based on the currency type
         int additionalAmount = 0;
@@ -198,7 +198,8 @@ public class Enemy : MonoBehaviour
             }
         }
         
-        int totalAmount = baseAmount + additionalAmount;
+        // Apply multiplier AFTER all bonuses: (base + bonus) * multiplier
+        int totalAmount = Mathf.RoundToInt((baseAmount + additionalAmount) * currencyMult);
         
         // Get collider bounds
         Collider2D col = GetComponent<Collider2D>();

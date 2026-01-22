@@ -34390,7 +34390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stage: 1
-  unlockedStage: 1
+  unlockedStage: 3
   maxStage: 8
   increaseButton: {fileID: 0}
   decreaseButton: {fileID: 0}
