@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3cea06f9bca6014aa2e909bf67b17e5, type: 3}
   m_Name: BossPinkSlime
   m_EditorClassIdentifier: 
-  hp: 100
-  baseReflectionMultiplier: 1
+  hp: 200
+  baseReflectionMultiplier: 1.5
   exp: 50
   currencyType: 1
   baseCurrencyAmount: 0

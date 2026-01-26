@@ -633,7 +633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: b61900a7d4b573941adaf80ca70fdf74, type: 2}
-  moveSpeed: 2
+  moveSpeed: 2.5
   pool: {fileID: 0}
   spawner: {fileID: 0}
   currencyReference: {fileID: 0}

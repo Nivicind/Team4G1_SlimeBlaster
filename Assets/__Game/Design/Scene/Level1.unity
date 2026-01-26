@@ -7812,7 +7812,7 @@ MonoBehaviour:
   - {fileID: 985953387}
   - {fileID: 659783519}
   - {fileID: 347123013}
-  spawnTime: 3
+  spawnTime: 55
   moveSpeed: 0.5
   spawnOffsetX: 10
   spawnOffsetY: -8.77

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3cea06f9bca6014aa2e909bf67b17e5, type: 3}
   m_Name: BlueSlime
   m_EditorClassIdentifier: 
-  hp: 30
-  baseReflectionMultiplier: 0.3
+  hp: 40
+  baseReflectionMultiplier: 1
   exp: 10
   currencyType: 0
   baseCurrencyAmount: 1
   spawnAmount: 1
-  spawnInterval: 4
+  spawnInterval: 3
   maxCapacity: 25
   startTime: 0

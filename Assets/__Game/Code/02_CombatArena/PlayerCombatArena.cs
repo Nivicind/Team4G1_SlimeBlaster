@@ -275,19 +275,39 @@ public class PlayerCombatArena : MonoBehaviour
 
     private IEnumerator HpLossRoutine()
     {
+        float gameTimeElapsed = 0f;
+        float nextIncreaseTime = GameConfig.Instance != null ? GameConfig.Instance.hpLossIncreaseInterval : 30f;
+        
         while (true)
         {
-            float interval = GameConfig.Instance != null ? GameConfig.Instance.hpLossInterval : 1f;
-            yield return new WaitForSeconds(interval);
-            
             if (!isDead && playerStats != null)
             {
                 int hpLoss = playerStats.GetStatValue(EnumStat.hpLossPerSecond);
                 if (hpLoss > 0)
                 {
-                    TakeDamage(hpLoss);
+                    // 🎯 Smooth HP loss: spread damage into 1 HP ticks
+                    // Example: 3 HP/sec → 3 ticks of 1 damage, each 0.33 sec apart
+                    float tickInterval = 1f / hpLoss;
+                    TakeDamage(1);
+                    
+                    // ⏱️ Track time and increase HP loss over time
+                    gameTimeElapsed += tickInterval;
+                    if (gameTimeElapsed >= nextIncreaseTime)
+                    {
+                        int increaseAmount = GameConfig.Instance != null ? GameConfig.Instance.hpLossIncreaseAmount : 1;
+                        playerStats.AddStat(EnumStat.hpLossPerSecond, increaseAmount);
+                        float interval = GameConfig.Instance != null ? GameConfig.Instance.hpLossIncreaseInterval : 30f;
+                        nextIncreaseTime += interval;
+                        Debug.Log($"⏱️ HP Loss increased! Now: {playerStats.GetStatValue(EnumStat.hpLossPerSecond)} HP/sec");
+                    }
+                    
+                    yield return new WaitForSeconds(tickInterval);
+                    continue; // Skip the default wait below
                 }
             }
+            
+            // Default wait if no HP loss or dead
+            yield return new WaitForSeconds(0.5f);
         }
     }
 

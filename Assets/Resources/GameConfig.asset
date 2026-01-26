@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c9d7bda8b927f4b92823d3d87272d9, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  hpLossInterval: 2
+  hpLossIncreaseInterval: 12
+  hpLossIncreaseAmount: 1
   expPerLevelMultiplier: 100
   enemyHealthMultipliers:
   - 1

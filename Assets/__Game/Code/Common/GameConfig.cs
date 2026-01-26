@@ -22,9 +22,12 @@ public class GameConfig : ScriptableObject
         }
     }
 
-    [Header("⏱️ HP Loss")]
-    [Tooltip("Seconds between each HP loss tick")]
-    public float hpLossInterval = 1f;
+    [Header("⏱️ HP Loss Scaling")]
+    [Tooltip("Seconds between each HP loss increase (e.g., 30 = every 30 sec, add more HP loss)")]
+    public float hpLossIncreaseInterval = 30f;
+    
+    [Tooltip("How much HP loss increases each interval (e.g., 1 = +1 HP/sec every interval)")]
+    public int hpLossIncreaseAmount = 1;
 
     [Header("📐 EXP Formula")]
     [Tooltip("EXP needed = level × this value (100 = level 1 needs 100, level 2 needs 200...)")]
