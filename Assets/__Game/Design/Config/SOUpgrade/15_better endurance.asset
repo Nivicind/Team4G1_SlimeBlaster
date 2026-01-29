@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 200+50*(n-1)
   costUnit: 0
   unlockRequirementLevel: 5
-  description1: Greatly expands maximum health
-  description2: 
+  description1: 'Greatly expands maximum health.
+
+    +20 Max HP'

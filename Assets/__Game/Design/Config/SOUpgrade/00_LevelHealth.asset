@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 1
   costUnit: 4
   unlockRequirementLevel: 1
-  description1: Consumes XP Bits to increase max health
-  description2: 
+  description1: 'Consumes XP Bits to increase max health.
+
+    +50 Max HP'

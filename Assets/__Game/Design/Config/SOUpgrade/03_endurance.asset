@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 2+1*(n-1)
   costUnit: 0
   unlockRequirementLevel: 1
-  description1: Increases maximum health capacity
-  description2: 
+  description1: 'Increases maximum health capacity.
+
+    +20 HP'

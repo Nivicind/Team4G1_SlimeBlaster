@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 500+200*(n-1)
   costUnit: 0
   unlockRequirementLevel: 5
-  description1: Massively increases damage against Bosses
-  description2: 
+  description1: 'Massively increases damage against Bosses.
+
+    +40 Boss ATK'

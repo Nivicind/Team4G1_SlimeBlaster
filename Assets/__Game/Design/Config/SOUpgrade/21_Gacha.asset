@@ -21,5 +21,7 @@ MonoBehaviour:
   costFormula: 15+10*(n-1)
   costUnit: 3
   unlockRequirementLevel: 1
-  description1: Increases the chance to deal a critical strike
-  description2: 
+  description1: 'Increases the chance to deal a critical strike.
+
+    +8% Critical
+    ATK'

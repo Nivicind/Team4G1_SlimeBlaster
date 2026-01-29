@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 15+1*(n-1)
   costUnit: 2
   unlockRequirementLevel: 10
-  description1: Reduces damage taken from Boss attacks
-  description2: 
+  description1: 'Reduces damage taken from Boss attacks.
+
+    + 1 Boss Armor'

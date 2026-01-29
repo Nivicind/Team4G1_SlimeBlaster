@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 1
   costUnit: 4
   unlockRequirementLevel: 1
-  description1: Converts XP Bits into raw damage
-  description2: 
+  description1: 'Converts XP Bits into raw damage.
+
+    +15 ATK'

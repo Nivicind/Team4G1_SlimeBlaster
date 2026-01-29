@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 150+50*(n-1)
   costUnit: 0
   unlockRequirementLevel: 5
-  description1: Deals bonus damage with every shot
-  description2: 
+  description1: 'Deals bonus damage with every shot.
+
+    +10 ATK'

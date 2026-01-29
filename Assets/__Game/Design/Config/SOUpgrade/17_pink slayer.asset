@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 1
   costUnit: 1
   unlockRequirementLevel: 5
-  description1: Deals extra damage to Bosses
-  description2: 
+  description1: 'Deals extra damage to Bosses.
+
+    + 40 Boss ATK'
