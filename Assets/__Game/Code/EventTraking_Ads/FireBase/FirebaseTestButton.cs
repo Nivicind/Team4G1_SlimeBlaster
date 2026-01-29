@@ -19,8 +19,8 @@ public class FirebaseTestButton : MonoBehaviour
     [ContextMenu("📺 Test Show Ads")]
     public void AdsEvents()
     {
-        MizuLog.EventAndAds("AdsEventStart");
+        Debug.Log("ADS event Started");
         FirebaseAnalytics.LogEvent("PressedAds", new Parameter("Ads", 1));
-        MizuLog.EventAndAds("AdsEventEnd");
+        Debug.Log("ADS event Ended");
     }
 }

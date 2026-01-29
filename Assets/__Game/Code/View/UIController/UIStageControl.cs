@@ -611,7 +611,7 @@ public class UIStageControl : MonoBehaviour
     }
     
     /// <summary>
-    /// 🔄 Called when object becomes active - refresh unlock states
+    /// 🔄 Called when object becomes active - refresh unlock states and navigate to newest unlocked level
     /// </summary>
     private void OnEnable()
     {
@@ -627,6 +627,11 @@ public class UIStageControl : MonoBehaviour
             
             // Refresh all locked states
             UpdateLockedStates();
+            
+            // 🎯 Navigate to newest unlocked level (0-based index)
+            int newestUnlockedIndex = Mathf.Clamp(currentUnlockedStage - 1, 0, stageImages.Count - 1);
+            currentIndex = newestUnlockedIndex;
+            selectedStage = currentUnlockedStage;
             
             // Update current stage unlock status
             isCurrentStageUnlocked = IsStageUnlocked(currentIndex);
