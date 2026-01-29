@@ -14,6 +14,7 @@ public class BreachTerminateManager : MonoBehaviour
     [Header("GameOver Buttons")]
     public List<Button> toHomeButtons;
     public List<Button> restartButtons;
+    public List<Button> nextLevelButtons;
 
     [Header("Targets")]
     public GameObject menuScene;
@@ -48,6 +49,12 @@ public class BreachTerminateManager : MonoBehaviour
         {
             if (button != null)
                 button.onClick.AddListener(OnRestartClicked);
+        }
+        
+        foreach (var button in nextLevelButtons)
+        {
+            if (button != null)
+                button.onClick.AddListener(OnNextLevelClicked);
         }
     }
 
@@ -186,6 +193,14 @@ public class BreachTerminateManager : MonoBehaviour
         // 🔊 Play button click sound
         GlobalSoundManager.PlaySound(SoundType.buttonClick);
         
+        TriggerRestart();
+    }
+    
+    /// <summary>
+    /// 🔄 Public method to trigger restart (used by Next Level button)
+    /// </summary>
+    public void TriggerRestart()
+    {
         transition.PlayTransition(() =>
         {
             if (gameOverPanel != null)
@@ -204,5 +219,32 @@ public class BreachTerminateManager : MonoBehaviour
             if (backgroundMusic != null)
                 backgroundMusic.TransitionToCombatMusic();
         });
+    }
+    
+    /// <summary>
+    /// ➡️ Called when Next Level button is clicked - advances to next unlocked stage and restarts
+    /// </summary>
+    private void OnNextLevelClicked()
+    {
+        // 🔊 Play button click sound
+        GlobalSoundManager.PlaySound(SoundType.buttonClick);
+        
+        // Advance to next stage (which was just unlocked from winning)
+        if (Stage.Instance != null)
+        {
+            int currentStage = Stage.Instance.GetStage();
+            int unlockedStage = Stage.Instance.GetUnlockedStage();
+            
+            // Go to next stage if available and unlocked
+            int nextStage = currentStage + 1;
+            if (nextStage <= unlockedStage)
+            {
+                Stage.Instance.SetStage(nextStage);
+                MizuLog.General($"[NextLevel] Moving to stage {nextStage}");
+            }
+        }
+        
+        // Restart with new stage
+        TriggerRestart();
     }
 }

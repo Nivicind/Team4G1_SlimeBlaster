@@ -28,6 +28,11 @@ public class PlayerCombatUI : MonoBehaviour
     [SerializeField] private GameObject winText;
     [SerializeField] private GameObject loseText;
     [SerializeField] private GameObject collectionText;
+    
+    [Header("Game Over Buttons")]
+    [SerializeField] private Button upgradeButton;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button nextLevelButton;
 
     [Header("Currency Display")]
     [SerializeField] private List<CurrencyDisplay> currencyDisplays;
@@ -63,6 +68,14 @@ public class PlayerCombatUI : MonoBehaviour
         if (collectionText != null)
             collectionText.SetActive(false);
         
+        // Hide all game over buttons initially
+        if (upgradeButton != null)
+            upgradeButton.gameObject.SetActive(false);
+        if (restartButton != null)
+            restartButton.gameObject.SetActive(false);
+        if (nextLevelButton != null)
+            nextLevelButton.gameObject.SetActive(false);
+        
         // Hide all currency displays (both parent and icon)
         HideAllCurrencyDisplays();
     }
@@ -72,6 +85,8 @@ public class PlayerCombatUI : MonoBehaviour
         // Hide all currency displays when disabled
         HideAllCurrencyDisplays();
     }
+    
+    
     
     /// <summary>
     /// 🔒 Hide all currency icons and parents
@@ -190,6 +205,22 @@ public class PlayerCombatUI : MonoBehaviour
         
         // Show currencies one by one
         yield return StartCoroutine(ShowCurrenciesSequence());
+        
+        // 🎯 Show Upgrade button first
+        if (upgradeButton != null)
+        {
+            upgradeButton.gameObject.SetActive(true);
+            PlayCurrencyPopUpAnimation(upgradeButton.gameObject);
+        }
+        
+        yield return new WaitForSeconds(currencyPopUpDuration + delayBetweenCurrencies);
+        
+        // 🎯 Show Next Level button (WIN only)
+        if (nextLevelButton != null)
+        {
+            nextLevelButton.gameObject.SetActive(true);
+            PlayCurrencyPopUpAnimation(nextLevelButton.gameObject);
+        }
     }
     
     /// <summary>
@@ -217,6 +248,22 @@ public class PlayerCombatUI : MonoBehaviour
         
         // Show currencies one by one
         yield return StartCoroutine(ShowCurrenciesSequence());
+        
+        // 🎯 Show Upgrade button first
+        if (upgradeButton != null)
+        {
+            upgradeButton.gameObject.SetActive(true);
+            PlayCurrencyPopUpAnimation(upgradeButton.gameObject);
+        }
+        
+        yield return new WaitForSeconds(currencyPopUpDuration + delayBetweenCurrencies);
+        
+        // 🎯 Show Restart button (LOSE only)
+        if (restartButton != null)
+        {
+            restartButton.gameObject.SetActive(true);
+            PlayCurrencyPopUpAnimation(restartButton.gameObject);
+        }
     }
     
     /// <summary>
