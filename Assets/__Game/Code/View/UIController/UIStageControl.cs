@@ -727,14 +727,14 @@ public class UIStageControl : MonoBehaviour
             stageContainer.anchoredPosition = new Vector2(targetX, stageContainer.anchoredPosition.y);
         }
         
-        // Scale images - only selected stage gets big scale
+        // Scale images - selected stage gets big scale (locked or unlocked)
         for (int i = 0; i < stageImages.Count; i++)
         {
             if (stageImages[i] == null) continue;
             
             Transform imgTransform = stageImages[i].transform;
-            // Scale up only if this is the current viewed stage AND it's unlocked and selected
-            bool isSelected = (i == currentIndex) && IsStageUnlocked(i);
+            // Scale up if this is the current viewed stage (regardless of lock status)
+            bool isSelected = (i == currentIndex);
             float targetScale = isSelected ? selectedScale : unselectedScale;
             
             if (animate)
