@@ -21,5 +21,7 @@ MonoBehaviour:
   costFormula: 5+5*(n-1)
   costUnit: 2
   unlockRequirementLevel: 5
-  description1: Restores a large amount of health upon killing an enemy
-  description2: 
+  description1: 'Restores a large amount of health upon killing an enemy.
+
+    +2
+    HP'

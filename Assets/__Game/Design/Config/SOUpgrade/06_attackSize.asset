@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 50+150*(n-1)
   costUnit: 0
   unlockRequirementLevel: 1
-  description1: Expands the area of effect for your attacks
-  description2: 
+  description1: 'Expands the area of effect for your attacks.
+
+    +10% Size'

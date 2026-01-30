@@ -21,5 +21,7 @@ MonoBehaviour:
   costFormula: 10+1*(n-1)
   costUnit: 0
   unlockRequirementLevel: 5
-  description1: Deals more damage based on the number of enemies in the area
-  description2: 
+  description1: 'Deals more damage based on the number of enemies in the area.
+
+    +
+    10% ATK per enemy'

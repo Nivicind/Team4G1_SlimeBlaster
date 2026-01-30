@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 200
   costUnit: 0
   unlockRequirementLevel: 1
-  description1: Blue enemies drop more bits when destroyed
-  description2: 
+  description1: 'Blue enemies drop more bits when destroyed.
+
+    +1 Bit'

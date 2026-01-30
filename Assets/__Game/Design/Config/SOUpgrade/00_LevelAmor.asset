@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 1
   costUnit: 4
   unlockRequirementLevel: 1
-  description1: Compresses XP Bits to harden armor
-  description2: 
+  description1: 'Compresses XP Bits to harden armor.
+
+    +10 Armor'

@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 50+50*(n-1)
   costUnit: 0
   unlockRequirementLevel: 5
-  description1: Increases attack speed
-  description2: 
+  description1: 'Increases attack speed.
+
+    +5 ATK Speed'

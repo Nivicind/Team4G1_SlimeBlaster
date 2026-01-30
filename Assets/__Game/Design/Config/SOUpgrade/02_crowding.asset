@@ -21,5 +21,6 @@ MonoBehaviour:
   costFormula: 10+50*(n-1)
   costUnit: 0
   unlockRequirementLevel: 10
-  description1: Increases the enemy spawn rate
-  description2: 
+  description1: 'Increases the enemy spawn rate.
+
+    +20% Spawn Rate'
