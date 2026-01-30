@@ -1,5 +1,6 @@
 using UnityEngine;
 using Firebase.Extensions;
+using Firebase.Analytics;
 
 public class FireBaseAnalytics : MonoBehaviour
 {
@@ -24,11 +25,13 @@ public class FireBaseAnalytics : MonoBehaviour
             var dependencyStatus = task.Result;
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+
                 // Create and hold a reference to your FirebaseApp,
                 // where app is a Firebase.FirebaseApp property of your application class.
                 app = Firebase.FirebaseApp.DefaultInstance;
                 Firebase.FirebaseApp.LogLevel = Firebase.LogLevel.Debug;
-                isFirebaseReady = true; 
+                isFirebaseReady = true;
 
                 // Set a flag here to indicate whether Firebase is ready to use by your app.
             }
@@ -49,7 +52,7 @@ public class FireBaseAnalytics : MonoBehaviour
             "level_complete",
             new Firebase.Analytics.Parameter("level_number", levelNumber),
             new Firebase.Analytics.Parameter("score", score)
-        );  
+        );
         Debug.Log("LogLevelComplete Firebase End");
     }
     public void LogLevelReset(int levelNumber)
@@ -59,7 +62,7 @@ public class FireBaseAnalytics : MonoBehaviour
         Firebase.Analytics.FirebaseAnalytics.LogEvent(
             "level_reset",
             new Firebase.Analytics.Parameter("level_number", levelNumber)
-        );  
+        );
         Debug.Log("LogLevelReset Firebase End");
     }
 }

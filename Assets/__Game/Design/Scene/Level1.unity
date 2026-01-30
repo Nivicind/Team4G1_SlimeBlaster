@@ -12535,7 +12535,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8281b24cf9fdd7447bb44a5f562dbfc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 933089642}
 --- !u!114 &776054953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15961,8 +15960,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1011987915}
-  - component: {fileID: 1011987914}
-  - component: {fileID: 1011987913}
+  - component: {fileID: 1011987917}
+  - component: {fileID: 1011987916}
   m_Layer: 0
   m_Name: FirebaseAnalystic
   m_TagString: Untagged
@@ -15970,32 +15969,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1011987913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1011987912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc57e02ec38325643a15c44e16c36a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FireBaseLevelCompleteButton: {fileID: 933089642}
-  FireBaseLevelResetButton: {fileID: 217063240}
---- !u!114 &1011987914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1011987912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 817e4417a557a4d4d8c23cd119dafafb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1011987915
 Transform:
   m_ObjectHideFlags: 0
@@ -16011,6 +15984,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1011987916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011987912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc57e02ec38325643a15c44e16c36a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FireBaseLevelCompleteButton: {fileID: 933089642}
+  FireBaseLevelResetButton: {fileID: 307108799}
+--- !u!114 &1011987917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011987912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817e4417a557a4d4d8c23cd119dafafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1014337849
 PrefabInstance:
   m_ObjectHideFlags: 0
